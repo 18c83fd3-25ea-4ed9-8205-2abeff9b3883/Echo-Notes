@@ -62,58 +62,64 @@ Echo-Notes/
 ├── setup.py             # Installation config
 ├── requirements.txt     # Dependencies
 └── ...                  # Other project files
-🛠 Installation
-bash
-# Clone repository
+```
+
+
+## 🛠 Installation
+### Clone repository
 git clone https://github.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes
 cd Echo-Notes
 
-# Install with pip (recommended)
+### Install with pip (recommended)
 pip install -e .
 
-# Alternative: Install requirements only
+### Alternative: Install requirements only
 pip install -r requirements.txt
-🔧 Cron Configuration
+
+## 🔧 Cron Configuration
 Hourly processing:
 
-bash
+```text
 0 * * * * process-notes >> ~/Documents/notes/processing.log 2>&1
+```
 Weekly summary:
 
-bash
+```text
 0 12 * * 0 generate-summary >> ~/Documents/notes/weekly.log 2>&1
-Core Features
-Daily Processing (process-notes)
-Automatic note cleanup and structuring
+```
 
-Task extraction with checklists
+## Core Features
+- Daily Processing (process-notes)
+- Automatic note cleanup and structuring
 
-Smart date parsing from content
+- Task extraction with checklists
 
-Error-resilient processing
+- Smart date parsing from content
 
-Weekly Summary (generate-summary)
-Aggregates 7 days of notes
+- Error-resilient processing
 
-Identifies key themes and progress
+### Weekly Summary (generate-summary)
+- Aggregates 7 days of notes
 
-Generates actionable next steps
+- Identifies key themes and progress
 
-Creates consolidated Markdown report
+- Generates actionable next steps
 
-📜 Changelog
+- Creates consolidated Markdown report
+
+## Changelog
 See CHANGELOG.md for full version history.
 
-License
+## License
 MIT - Use, modify, and share freely.
 
-🙋 Support
+## 🙋 Support
 Feel free to fork and adapt. PRs welcome for:
 
-New analysis modes
+- New analysis modes
 
-Enhanced error handling
+- Enhanced error handling
 
-Additional storage backends
+- Additional storage backends
 
-UI integrations
+- UI integrations
