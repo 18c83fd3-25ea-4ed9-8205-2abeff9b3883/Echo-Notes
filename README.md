@@ -19,12 +19,11 @@ Capture voice notes on your phone, sync them via Nextcloud, and automatically cl
 - Local-only automation  
 - Voice-to-text journaling  
 - Privacy-first LLM workflows  
-- CLI-first tooling
 
 **Upcoming:**  
 - Config file for customizable prompts  
 - Optional journaling dashboard  
-- Auto-backups to encrypted store
+- Auto weekly summaries
 
 ---
 
