@@ -78,7 +78,7 @@ Assumes:
 
 **Weekly summary** (every Sunday at noon):
 ```bash
-0 12 * * 0 /usr/bin/python3 /home/user/Documents/notes/ai_weekly_summary.py >> /home/user/Documents/notes/weekly.log 2>&1
+0 12 * * 0 /usr/bin/python3 /home/user/Documents/notes/weekly-summary-nextcloud.py >> /home/user/Documents/notes/weekly.log 2>&1
 ```
 
 ---
