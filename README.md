@@ -84,7 +84,11 @@ pip install -e .
 ```text
 pip install -r requirements.txt
 ```
-## 🔧 Cron Configuration
+## 🔧 Scheduling Configuration
+
+Echo-Notes now supports two methods for scheduling note processing and summary generation:
+
+### Option 1: Cron Configuration (Traditional)
 Hourly processing:
 
 ```text
@@ -95,6 +99,84 @@ Weekly summary:
 ```text
 0 12 * * 0 generate-summary >> ~/Documents/notes/weekly.log 2>&1
 ```
+
+### Option 2: Built-in Daemon (New)
+Echo-Notes now includes a built-in daemon that can handle scheduling without cron:
+
+```text
+# Configure scheduling settings
+echo-notes-config
+
+# Start the daemon in true background mode (detached from terminal)
+echo-notes-daemon --daemon
+
+# Stop the daemon
+echo-notes-daemon --stop
+
+# Or start with the configuration option directly
+echo-notes-daemon --configure
+```
+
+The daemon reads scheduling settings from `shared/schedule_config.json`, which can be modified directly or through the configuration tool.
+
+When run with the `--daemon` flag, the process will:
+- Detach completely from the terminal
+- Continue running in the background even if you close the terminal
+- Write logs to `~/Documents/notes/daemon.log` and `~/Documents/notes/daemon.error.log`
+- Create a PID file at `~/Documents/notes/echo-notes.pid` for tracking
+
+#### Running as a Systemd Service
+
+For a more robust setup, you can run the daemon as a systemd service:
+
+1. Create a systemd service file:
+
+```text
+sudo nano /etc/systemd/system/echo-notes.service
+```
+
+2. Add the following content:
+
+```text
+[Unit]
+Description=Echo-Notes Daemon
+After=network.target
+
+[Service]
+Type=simple
+User=YOUR_USERNAME
+ExecStart=/usr/local/bin/echo-notes-daemon
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+```
+
+3. Enable and start the service:
+
+```text
+sudo systemctl enable echo-notes.service
+sudo systemctl start echo-notes.service
+```
+
+4. Check status:
+
+```text
+sudo systemctl status echo-notes.service
+```
+
+#### Scheduling Options
+
+The following scheduling options can be configured:
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `processing_interval` | Minutes between note processing runs | 60 (hourly) |
+| `summary_interval` | Minutes between summary generation | 10080 (weekly) |
+| `summary_day` | Day of week for summary (0=Monday, 6=Sunday) | 6 (Sunday) |
+| `summary_hour` | Hour of day for summary (0-23) | 12 (noon) |
+| `daemon_enabled` | Whether the daemon is active | true |
 
 ## Core Features
 - Daily Processing (process-notes)
