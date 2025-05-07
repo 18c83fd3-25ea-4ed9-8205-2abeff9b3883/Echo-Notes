@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2024-05-07
+
+### Added
+
+- Added built-in daemon for scheduling without cron
+- Added customizable scheduling intervals through configuration
+- Added `echo-notes-daemon` command to run the scheduling daemon
+- Added `echo-notes-config` command for interactive scheduling configuration
+- Added support for running as a systemd service
+- Added `schedule_config.json` for storing scheduling preferences
+- Added true daemonization support with `--daemon` flag to run detached from terminal
+- Added daemon process management with `--stop` flag to terminate the daemon
+
+### Changed
+
+- Updated setup.py with new entry points
+- Enhanced configuration system with scheduling options
+- Improved documentation with daemon setup instructions
+
 ## [0.3.0] - 2024-05-07
 
 ### Added
