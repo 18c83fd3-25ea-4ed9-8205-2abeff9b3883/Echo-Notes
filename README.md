@@ -70,16 +70,19 @@ Echo-Notes/
 
 ## 🛠 Installation
 ### Clone repository
+```text
 git clone https://github.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes
 
 cd Echo-Notes
-
+```
 ### Install with pip (recommended)
+```text
 pip install -e .
-
+```
 ### Alternative: Install requirements only
+```text
 pip install -r requirements.txt
-
+```
 ## 🔧 Cron Configuration
 Hourly processing:
 
