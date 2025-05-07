@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 -   Added `prompts_config.json` to store customizable prompts for daily note processing and weekly summaries.
 -   Extracted hard-coded prompts from scripts into the config file for easier customization.
 -   Modified `ai_weekly_summary.py` and `ai_notes_nextcloud.py` to load prompts from the config file.
+-   Added environment variable support for configurable paths:
+    - `ECHO_NOTES_DIR`: Location of Nextcloud notes (default: ~/Documents/notes/log)
+    - `ECHO_APP_DIR`: Location of Echo-Notes application (default: auto-detected)
 
 - Modular architecture with shared components
 - Python package installation support
