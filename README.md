@@ -24,6 +24,8 @@ Capture voice notes on your phone, sync them via Nextcloud, and automatically cl
 **Upcoming:**
 - Optional journaling dashboard
 - Mood tracking integration
+- Sync install check
+- NextCloud app intergration???
 
 ---
 
