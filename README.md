@@ -36,7 +36,7 @@ This project is designed for users who:
 - Use Nextcloud for syncing and note-taking
 - Prefer clean architecture with shared modules
 - Need automated processing without cloud services
-- Value easy installation via Python packaging
+- Want to focus on the idea, not the note taking
 
 ---
 
