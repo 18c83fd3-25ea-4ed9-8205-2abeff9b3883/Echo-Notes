@@ -95,7 +95,7 @@ Assumes:
   - Task checklist
   - Bullet point suggestions
 
-**Weekly Summary Script (`weekly_summary_nextcloud.py`)**:
+**Weekly Summary Script (`weekly-summary-nextcloud.py`)**:
 * Runs every Sunday
 * Collects all summaries from past 7 days
 * Generates consolidated report with:
