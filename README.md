@@ -152,7 +152,7 @@ pip install requests
 ## Files
 
 * `ai_notes_nextcloud.py` - Main processing script
-* `ai_weekly_summary.py` - Weekly aggregation script
+* `weekly-summary-nextcloud.py` - Weekly aggregation script
 * `processing.log` - Hourly script output (optional)
 * `weekly.log` - Summary generation logs (optional)
 
