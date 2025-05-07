@@ -19,15 +19,14 @@ Capture voice notes on your phone, sync them via Nextcloud, and automatically cl
 - Local-only automation  
 - Voice-to-text journaling  
 - Privacy-first LLM workflows  
+- Auto weekly summaries
 
 **Upcoming:**  
 - Config file for customizable prompts  
 - Optional journaling dashboard  
-- Auto weekly summaries
+- Mood tracking integration
 
 ---
-
-
 
 ## Why This?
 
@@ -36,16 +35,14 @@ This project is designed for users who:
 - Use Nextcloud for syncing and note-taking
 - Prefer owning their data and workflows end-to-end
 - Need voice-to-text logs cleaned up and structured automatically
-- Want to focus on the ideas and not the note taking process.
-
-No cloud APIs, no surveillance. Just your own device, your notes, and your LLM.
+- Want automated weekly reflections without cloud services
 
 ---
 
 ## ⚙How It Works
 
 ```text
-[Intergrated Keyboard Voice-to-Text Microphone]
+[Integrated Keyboard Voice-to-Text Microphone]
        ↓
 [Nextcloud Notes App]
        ↓
@@ -56,45 +53,58 @@ No cloud APIs, no surveillance. Just your own device, your notes, and your LLM.
 [Sends raw note text to local LLM in LM Studio]
        ↓
 [LLM returns cleaned + structured result → overwrites note]
-````
+       ↓
+[Weekly script aggregates summaries → generates reflection]
+```
 
 ---
 
 ## 🗂 Folder Setup
 
 Assumes:
-
 * Your notes are synced to: `~/Documents/notes/log/`
 * You run LM Studio locally on your desktop
 * LM Studio has developer mode enabled and LLM loaded
-* You schedule the script with `cron` to run hourly
+* Scheduled scripts via `cron`
 
 ---
 
-## 🔁 Cron Job Example
+## 🔁 Cron Job Examples
 
-To run every hour, add to crontab with `crontab -e`:
-
+**Hourly processing** (add to crontab with `crontab -e`):
+```bash
+0 * * * * /usr/bin/python3 /home/user/Documents/notes/ai_notes_nextcloud.py >> /home/user/Documents/notes/processing.log 2>&1
 ```
-0 * * * * /usr/bin/python3 /home/user/Documents/notes/ai_notes_nextcloud.py >> /home/user/Documents/notes/ai_notes_nextcloud.log 2>&1
+
+**Weekly summary** (every Sunday at noon):
+```bash
+0 12 * * 0 /usr/bin/python3 /home/user/Documents/notes/ai_weekly_summary.py >> /home/user/Documents/notes/weekly.log 2>&1
 ```
 
 ---
 
 ## Script Behavior
 
-The script:
+**Main Script (`ai_notes_nextcloud.py`)**:
+* Processes `.md` files in `~/Documents/notes/log/`
+* Skips already summarized notes
+* Parses special `AI COMMAND:` instructions
+* Generates structured output with:
+  - Uppercase sections
+  - Timestamp
+  - Task checklist
+  - Bullet point suggestions
 
-* Looks for `.md` files in `~/Documents/notes/log/`
-* Skips files already summarized (based on a marker in the text)
-* Parses special `AI COMMAND:` lines if included in a note
-* Sends the content to your **LM Studio LLM** via REST API
-* Overwrites the note with structured output, including:
-
-  * Uppercase sections
-  * Timestamp
-  * Task checklist
-  * Bullet point suggestions
+**Weekly Summary Script (`ai_weekly_summary.py`)**:
+* Runs every Sunday
+* Collects all summaries from past 7 days
+* Generates consolidated report with:
+  - Weekly reflection
+  - Main themes
+  - Completed tasks
+  - Pending issues
+  - Next week's priorities
+* Creates new `Weekly Summary - YYYY-MM-DD.md` file
 
 ---
 
@@ -129,11 +139,10 @@ SUGGESTIONS / NEXT STEPS
 
 * Python 3.7+
 * `requests` library
-* LM Studio running locally with a compatible LLM (e.g. Qwen2.5)
+* LM Studio running locally with compatible LLM (e.g. Qwen2.5)
 * Nextcloud client for file syncing
 
 Install dependencies:
-
 ```bash
 pip install requests
 ```
@@ -142,28 +151,34 @@ pip install requests
 
 ## Files
 
-* `ai_notes_nextcloud.py` — main script
-* `ai_notes_nextcloud.log` — cron output (optional)
+* `ai_notes_nextcloud.py` - Main processing script
+* `ai_weekly_summary.py` - Weekly aggregation script
+* `processing.log` - Hourly script output (optional)
+* `weekly.log` - Summary generation logs (optional)
 
 ---
 
 ## Example Use
 
-1. Record a voice note in Nextcloud Notes app on your phone
-2. Add the tag or category `log`
-3. Wait for the sync + cron job to run
-4. Note is rewritten into structured format by your local AI
+1. Record voice note in Nextcloud Notes app
+2. Add `log` category/tag
+3. Wait for sync + hourly processing
+4. Note is rewritten into structured format
+5. Weekly summary auto-generated every Sunday noon
 
 ---
 
-## 📜 License
+## License
 
-MIT — Use, modify, and share freely.
+MIT - Use, modify, and share freely.
 
 ---
 
 ## 🙋 Support
 
-Feel free to fork and adapt. PRs welcome for prompt improvements, new modes, or Nextcloud enhancements.
-
-
+Feel free to fork and adapt. PRs welcome for:
+- Prompt improvements
+- New analysis modes
+- Nextcloud integration enhancements
+- Visualization features
+```
