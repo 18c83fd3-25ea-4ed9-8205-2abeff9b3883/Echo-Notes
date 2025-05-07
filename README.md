@@ -53,7 +53,10 @@ This project is designed for users who:
 [Local LLM (LM Studio)]
        ↓
 [Structured Markdown Outputs]
-🗂 Project Structure
+```
+
+## 🗂 Project Structure
+```text
 Echo-Notes/
 ├── shared/               # Core modules
 │   ├── config.py        # Paths and settings
