@@ -11,7 +11,7 @@ from shared import (
 )
 
 def load_prompts_from_config():
-    with open(config.NOTES_DIR.parent.parent / 'CodeProjects' / 'Echo-Notes' / 'Echo-Notes' / 'shared' / 'prompts_config.json', 'r') as f:
+    with open(config.PROMPTS_CONFIG_PATH, 'r') as f:
         prompts = json.load(f)
     return prompts
 
