@@ -129,6 +129,25 @@ To customize:
 2. Modify the prompt text while keeping the placeholder variables (e.g., `{now}`, `{combined_text}`)
 3. Save the file - changes will be applied on the next processing run
 
+## Configuration
+
+Echo-Notes supports the following environment variables for flexible configuration:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ECHO_NOTES_DIR` | Location of Nextcloud notes | `~/Documents/notes/log` |
+| `ECHO_APP_DIR` | Location of Echo-Notes application | Auto-detected from script location |
+
+Example usage:
+```bash
+# Use a different notes directory
+export ECHO_NOTES_DIR="/path/to/your/notes"
+
+# Run the scripts
+process-notes
+generate-summary
+```
+
 ## Changelog
 See CHANGELOG.md for full version history.
 
