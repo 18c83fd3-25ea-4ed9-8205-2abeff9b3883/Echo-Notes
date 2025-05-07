@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import os
+import json
 from shared import (
     config,
     file_utils,
@@ -9,13 +10,19 @@ from shared import (
     llm_client
 )
 
+def load_prompts_from_config():
+    with open(config.NOTES_DIR.parent.parent / 'CodeProjects' / 'Echo-Notes' / 'Echo-Notes' / 'shared' / 'prompts_config.json', 'r') as f:
+        prompts = json.load(f)
+    return prompts
+
 def process_note(file_path: Path):
     text = file_utils.get_note_text(file_path)
     if file_utils.is_processed_note(text):
         return
     
     # ... rest of processing logic ...
-    processed = llm_client.query_llm(text, system_prompt)
+    prompts = load_prompts_from_config()
+    processed = llm_client.query_llm(text, prompts['daily_notes_prompt'])
     file_utils.write_processed_note(file_path, processed)
 
 def main():

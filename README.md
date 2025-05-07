@@ -21,9 +21,8 @@ Capture voice notes on your phone, sync them via Nextcloud, and automatically cl
 - Privacy-first LLM workflows  
 - Auto weekly summaries
 
-**Upcoming:**  
-- Config file for customizable prompts  
-- Optional journaling dashboard  
+**Upcoming:**
+- Optional journaling dashboard
 - Mood tracking integration
 
 ---
@@ -61,7 +60,9 @@ Echo-Notes/
 ├── shared/               # Core modules
 │   ├── config.py        # Paths and settings
 │   ├── file_utils.py    # File operations
-│   └── llm_client.py    # AI integration
+│   ├── llm_client.py    # AI integration
+│   ├── prompts_config.json # Customizable prompts
+│   └── date_helpers.py  # Date utilities
 ├── setup.py             # Installation config
 ├── requirements.txt     # Dependencies
 └── ...                  # Other project files
@@ -104,6 +105,7 @@ Weekly summary:
 - Smart date parsing from content
 
 - Error-resilient processing
+- Customizable prompts for note processing
 
 ### Weekly Summary (generate-summary)
 - Aggregates 7 days of notes
@@ -113,6 +115,19 @@ Weekly summary:
 - Generates actionable next steps
 
 - Creates consolidated Markdown report
+
+## Customizable Prompts
+
+Echo-Notes now supports customizable prompts through the `shared/prompts_config.json` file. This allows you to modify how the AI processes your notes without changing any code.
+
+Available prompts:
+- `daily_notes_prompt`: Controls how individual notes are processed and structured
+- `weekly_summary_prompt`: Defines how weekly summaries are generated
+
+To customize:
+1. Edit the `shared/prompts_config.json` file
+2. Modify the prompt text while keeping the placeholder variables (e.g., `{now}`, `{combined_text}`)
+3. Save the file - changes will be applied on the next processing run
 
 ## Changelog
 See CHANGELOG.md for full version history.

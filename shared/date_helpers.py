@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import re
 from pathlib import Path
 import os
+from shared import file_utils
 
 def extract_summary_timestamp(text: str) -> datetime:
     """Extract embedded timestamp from note content"""
@@ -15,7 +16,7 @@ def extract_summary_timestamp(text: str) -> datetime:
 
 def get_note_date(file_path: Path) -> datetime:
     """Get note date from content or filesystem"""
-    text = get_note_text(file_path)
+    text = file_utils.get_note_text(file_path)
     ts = extract_summary_timestamp(text)
     return ts or datetime.fromtimestamp(os.path.getmtime(file_path))
 
