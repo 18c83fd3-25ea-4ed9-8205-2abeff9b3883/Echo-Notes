@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Echo Notes
+Comment=Monitor and control Echo-Notes daemon
+Exec=echo-notes-dashboard
+Icon=${HOME}/.local/share/icons/echo-notes.png
+Terminal=false
+Categories=Utility;

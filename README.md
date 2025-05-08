@@ -120,9 +120,37 @@ echo-notes-daemon --stop
 # Or start with the configuration option directly
 echo-notes-daemon --configure
 
-# Launch the GUI dashboard
+# Launch the GUI dashboard from command line
 echo-notes-dashboard
 ```
+
+### GUI Dashboard Shortcuts
+
+Echo-Notes now includes multiple ways to launch the dashboard without using the command line:
+
+#### Simple Double-Click Launcher (All Platforms):
+The easiest way to launch the dashboard is to simply double-click the `launcher.py` file in the Echo-Notes directory. This works on all platforms (Windows, macOS, Linux) and doesn't require any installation.
+
+#### Linux:
+```bash
+# Install desktop shortcut
+./install_desktop_shortcut.sh
+```
+After running this script, you'll find "Echo Notes Dashboard" in your applications menu.
+
+#### Windows:
+```bash
+# Create desktop shortcut
+create_windows_shortcut.bat
+```
+This will create a shortcut on your desktop that you can double-click to launch the dashboard.
+
+#### macOS:
+```bash
+# Create macOS application
+python create_macos_shortcut.py
+```
+This will create an application in your ~/Applications folder that you can launch like any other macOS app.
 
 The daemon reads scheduling settings from `shared/schedule_config.json`, which can be modified directly or through the configuration tool.
 

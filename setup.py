@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="echo_notes",
-    version="0.5.0",
+    version="0.5.1",
     packages=find_packages(),
     install_requires=[
         'requests>=2.25.1',
@@ -19,4 +19,8 @@ setup(
             'echo-notes-dashboard=echo_notes_dashboard:main'
         ]
     },
+    data_files=[
+        ('share/applications', ['echo-notes-dashboard.desktop']),
+        ('bin', ['install_desktop_shortcut.sh', 'create_windows_shortcut.bat', 'create_macos_shortcut.py', 'launcher.py'])
+    ],
 )
