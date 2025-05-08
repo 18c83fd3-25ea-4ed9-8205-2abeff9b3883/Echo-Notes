@@ -110,6 +110,14 @@ class EchoNotesDashboard(QMainWindow):
         """Initialize the user interface"""
         self.setWindowTitle('Echo Notes')
         self.setMinimumSize(600, 400)
+        
+        # Set application icon
+        icon_path = Path(__file__).parent / "Echo-Notes-Icon.png"
+        if icon_path.exists():
+            self.setWindowIcon(QIcon(str(icon_path)))
+            logger.debug(f"Set application icon from {icon_path}")
+        else:
+            logger.warning(f"Icon file not found at {icon_path}")
 
         # Create central widget and main layout
         central_widget = QWidget()
@@ -485,6 +493,14 @@ def main():
 
         # Set application style
         app.setStyle("Fusion")
+        
+        # Set application icon
+        icon_path = Path(__file__).parent / "Echo-Notes-Icon.png"
+        if icon_path.exists():
+            app.setWindowIcon(QIcon(str(icon_path)))
+            logger.debug(f"Set application icon from {icon_path}")
+        else:
+            logger.warning(f"Icon file not found at {icon_path}")
 
         # Create and show the dashboard
         dashboard = EchoNotesDashboard()

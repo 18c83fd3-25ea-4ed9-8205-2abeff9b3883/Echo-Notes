@@ -22,11 +22,46 @@ pip install -r requirements.txt
 
 ## Usage
 
-To launch the dashboard:
+### Simple Double-Click Launcher (Recommended)
+
+The easiest way to launch the dashboard is to simply double-click the `launcher.py` file in the Echo-Notes directory. This works on all platforms (Windows, macOS, Linux) and doesn't require any installation.
+
+### Command Line Launch
+
+To launch the dashboard from the command line:
 
 ```bash
+# If installed via pip
+echo-notes-dashboard
+
+# Or directly from the project directory
 python Echo-Notes/echo_notes_dashboard.py
 ```
+
+### Desktop Shortcuts
+
+You can also create desktop shortcuts to launch the dashboard without using the command line:
+
+#### Linux:
+```bash
+# Install desktop shortcut
+./install_desktop_shortcut.sh
+```
+After running this script, you'll find "Echo Notes Dashboard" in your applications menu.
+
+#### Windows:
+```bash
+# Create desktop shortcut
+create_windows_shortcut.bat
+```
+This will create a shortcut on your desktop that you can double-click to launch the dashboard.
+
+#### macOS:
+```bash
+# Create macOS application
+python create_macos_shortcut.py
+```
+This will create an application in your ~/Applications folder that you can launch like any other macOS app.
 
 ## Dashboard Overview
 

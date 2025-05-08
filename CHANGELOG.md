@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file..
 
+## [0.5.1] - 2025-05-08
+
+### Added
+
+- Added simple cross-platform `launcher.py` script for double-click launching on all platforms
+- Added desktop shortcut creation scripts for Linux, Windows, and macOS
+- Added `echo-notes-dashboard.desktop` file for Linux desktop integration
+- Added `install_desktop_shortcut.sh` script for Linux shortcut installation
+- Added `create_windows_shortcut.bat` script for Windows desktop shortcut creation
+- Added `create_macos_shortcut.py` script for macOS application creation
+- Updated documentation with instructions for GUI launching without command line
+
 ## [0.5.0] - 2024-05-08
 
 ### Added
