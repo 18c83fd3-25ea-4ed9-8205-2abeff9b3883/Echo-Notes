@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file..
 
+## [0.5.0] - 2024-05-08
+
+### Added
+
+- Added GUI dashboard for monitoring and controlling the Echo-Notes daemon
+- Added real-time status display showing daemon running state
+- Added timestamps for last processed note and weekly summary
+- Added control buttons to start/stop daemon and trigger processing
+- Added real-time log display in the dashboard
+- Added `echo-notes-dashboard` command to launch the GUI
+- Added PyQt6 dependency for the GUI components
+
+### Changed
+
+- Updated setup.py with new dashboard entry point
+- Updated README.md with dashboard documentation
+- Added detailed dashboard_readme.md with usage instructions
+
 ## [0.4.0] - 2024-05-07
 
 ### Added
