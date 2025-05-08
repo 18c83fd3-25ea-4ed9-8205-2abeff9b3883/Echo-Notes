@@ -22,10 +22,12 @@ Capture voice notes on your phone, sync them via Nextcloud, and automatically cl
 - Auto weekly summaries
 
 **Upcoming:**
-- Optional journaling dashboard
 - Mood tracking integration
 - Sync install check
 - NextCloud app intergration???
+
+**Recently Added:**
+- GUI Dashboard for daemon control and monitoring
 
 ---
 
@@ -117,6 +119,9 @@ echo-notes-daemon --stop
 
 # Or start with the configuration option directly
 echo-notes-daemon --configure
+
+# Launch the GUI dashboard
+echo-notes-dashboard
 ```
 
 The daemon reads scheduling settings from `shared/schedule_config.json`, which can be modified directly or through the configuration tool.
@@ -190,6 +195,13 @@ The following scheduling options can be configured:
 
 - Error-resilient processing
 - Customizable prompts for note processing
+
+### GUI Dashboard
+- Monitor daemon status (running/not running)
+- View timestamps of last processed note and weekly summary
+- Control buttons to start/stop daemon and trigger processing
+- Real-time log display
+- For details, see [dashboard_readme.md](dashboard_readme.md)
 
 ### Weekly Summary (generate-summary)
 - Aggregates 7 days of notes
