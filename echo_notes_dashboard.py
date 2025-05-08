@@ -108,7 +108,7 @@ class EchoNotesDashboard(QMainWindow):
 
     def init_ui(self):
         """Initialize the user interface"""
-        self.setWindowTitle('Echo-Notes Dashboard')
+        self.setWindowTitle('Echo Notes')
         self.setMinimumSize(600, 400)
 
         # Create central widget and main layout
