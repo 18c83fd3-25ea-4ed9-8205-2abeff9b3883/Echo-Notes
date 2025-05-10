@@ -52,7 +52,8 @@ def get_default_schedule_config():
         "summary_interval": DEFAULT_SUMMARY_INTERVAL,
         "summary_day": DEFAULT_SUMMARY_DAY,
         "summary_hour": DEFAULT_SUMMARY_HOUR,
-        "daemon_enabled": True
+        "daemon_enabled": True,
+        "notes_directory": str(NOTES_DIR)
     }
 
 def save_schedule_config(config):
@@ -62,6 +63,14 @@ def save_schedule_config(config):
 
 # Load schedule config
 SCHEDULE_CONFIG = load_schedule_config()
+
+# Update NOTES_DIR from config if it exists
+if "notes_directory" in SCHEDULE_CONFIG:
+    notes_dir_from_config = Path(SCHEDULE_CONFIG["notes_directory"])
+    if notes_dir_from_config.exists() or notes_dir_from_config.parent.exists():
+        NOTES_DIR = notes_dir_from_config
+        # Also update environment variable for consistency
+        os.environ['ECHO_NOTES_DIR'] = str(NOTES_DIR)
 
 # Derived Values
 def weekly_summary_filename():
