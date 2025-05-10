@@ -15,7 +15,7 @@ from pathlib import Path
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QLabel, QTextEdit, QGroupBox, QSplitter,
-    QFrame, QSizePolicy
+    QFrame, QSizePolicy, QFileDialog, QMessageBox
 )
 from PyQt6.QtCore import Qt, QTimer, pyqtSlot, QSize, pyqtSignal, QObject, QMetaObject, Q_ARG, QThread
 from PyQt6.QtGui import QFont, QIcon, QColor, QPalette
@@ -140,6 +140,16 @@ class EchoNotesDashboard(QMainWindow):
         timestamps_layout.addWidget(self.last_note_label)
         timestamps_layout.addWidget(self.last_summary_label)
         status_layout.addLayout(timestamps_layout)
+
+        # Notes directory section
+        notes_dir_layout = QHBoxLayout()
+        self.notes_dir_label = QLabel(f"Notes Directory: {config.NOTES_DIR}")
+        self.notes_dir_label.setWordWrap(True)
+        self.browse_btn = QPushButton("Browse...")
+        self.browse_btn.clicked.connect(self.browse_notes_directory)
+        notes_dir_layout.addWidget(self.notes_dir_label, 3)
+        notes_dir_layout.addWidget(self.browse_btn, 1)
+        status_layout.addLayout(notes_dir_layout)
 
         main_layout.addWidget(status_group)
 
@@ -469,6 +479,63 @@ class EchoNotesDashboard(QMainWindow):
         except Exception as e:
             logger.error(f"Error updating summary timestamp: {e}")
             logger.error(traceback.format_exc())
+
+    @pyqtSlot()
+    def browse_notes_directory(self):
+        """Open a folder selection dialog to choose notes directory"""
+        try:
+            logger.info("Opening folder selection dialog for notes directory")
+            
+            # Get the current notes directory as the starting point
+            current_dir = str(config.NOTES_DIR)
+            
+            # Open folder selection dialog
+            new_dir = QFileDialog.getExistingDirectory(
+                self,
+                "Select Notes Directory",
+                current_dir,
+                QFileDialog.Option.ShowDirsOnly
+            )
+            
+            # If user selected a directory (didn't cancel)
+            if new_dir:
+                new_dir_path = Path(new_dir)
+                logger.info(f"User selected new notes directory: {new_dir_path}")
+                
+                # Update the configuration in memory
+                os.environ['ECHO_NOTES_DIR'] = str(new_dir_path)
+                config.NOTES_DIR = new_dir_path
+                
+                # Update the UI
+                self.notes_dir_label.setText(f"Notes Directory: {new_dir_path}")
+                
+                # Create the directory if it doesn't exist
+                if not new_dir_path.exists():
+                    new_dir_path.mkdir(parents=True, exist_ok=True)
+                    logger.info(f"Created new notes directory: {new_dir_path}")
+                
+                # Save the configuration to file for persistence
+                config.SCHEDULE_CONFIG["notes_directory"] = str(new_dir_path)
+                config.save_schedule_config(config.SCHEDULE_CONFIG)
+                logger.info(f"Saved notes directory to configuration file: {new_dir_path}")
+                
+                # Show confirmation message
+                QMessageBox.information(
+                    self,
+                    "Notes Directory Updated",
+                    f"Notes directory has been updated to:\n{new_dir_path}\n\nNew notes will be saved to this location."
+                )
+                
+                # Update status to check for notes in the new directory
+                self.check_last_processed_times()
+        except Exception as e:
+            logger.error(f"Error selecting notes directory: {e}")
+            logger.error(traceback.format_exc())
+            QMessageBox.warning(
+                self,
+                "Error",
+                f"Failed to update notes directory: {str(e)}"
+            )
 
     def closeEvent(self, event):
         """Handle window close event"""
