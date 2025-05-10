@@ -12,15 +12,15 @@ setup(
     python_requires='>=3.7',
     entry_points={
         'console_scripts': [
-            'process-notes=ai_notes_nextcloud:main',
-            'generate-summary=ai_weekly_summary:main',
-            'echo-notes-daemon=echo_notes_daemon:main',
-            'echo-notes-config=echo_notes_daemon:configure_scheduling',
-            'echo-notes-dashboard=echo_notes_dashboard:main'
+            'process-notes=echo_notes.notes_nextcloud:main',
+            'generate-summary=echo_notes.weekly_summary:main',
+            'echo-notes-daemon=echo_notes.daemon:main',
+            'echo-notes-config=echo_notes.daemon:configure_scheduling',
+            'echo-notes-dashboard=echo_notes.dashboard:main'
         ]
     },
     data_files=[
         ('share/applications', ['echo-notes-dashboard.desktop']),
-        ('bin', ['install_desktop_shortcut.sh', 'create_windows_shortcut.bat', 'create_macos_shortcut.py', 'launcher.py'])
+        ('bin', ['install_desktop_shortcuts.sh', 'create_windows_shortcut.bat', 'create_macos_shortcut.py', 'launcher.py'])
     ],
 )
