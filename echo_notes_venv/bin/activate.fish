@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV /home/j/Echo-Notes/echo_notes_venv
+set -gx VIRTUAL_ENV /home/j/Documents/CodeProjects/Echo-Notes/Echo-Notes/echo_notes_venv
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH

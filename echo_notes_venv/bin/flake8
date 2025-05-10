@@ -1,4 +1,4 @@
-#!/home/j/Echo-Notes/echo_notes_venv/bin/python3
+#!/home/j/Documents/CodeProjects/Echo-Notes/Echo-Notes/echo_notes_venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

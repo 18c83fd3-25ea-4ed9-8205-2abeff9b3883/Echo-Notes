@@ -6,6 +6,9 @@
 - File browser button in the UI to allow users to choose a custom folder location for notes
 - Persistent storage of the selected notes directory in the configuration file
 - Automatic creation of the selected directory if it doesn't exist
+- Unified uninstaller scripts for all platforms (bash, batch, and Python versions)
+- Support for preserving user notes during uninstallation
+- Command-line options for uninstaller (--keep-config, --purge)
 
 ### Fixed
 - Desktop icon launcher issues with variable expansion in .desktop files
