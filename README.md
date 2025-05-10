@@ -17,7 +17,31 @@ Capture voice notes on your phone, sync them via Nextcloud, and automatically cl
 
 **Focus:**  
 - Local-only automation  
-- Modular architecture  
+- Modular architecture
+- Proper Python package structure
+
+## Package Structure
+
+Echo-Notes is now organized as a proper Python package:
+
+```
+echo_notes/
+├── __init__.py
+├── daemon.py
+├── dashboard.py
+├── notes_nextcloud.py
+├── weekly_summary.py
+└── shared/
+    ├── __init__.py
+    ├── config.py
+    ├── date_helpers.py
+    ├── file_utils.py
+    ├── llm_client.py
+    ├── prompts_config.json
+    └── schedule_config.json
+```
+
+This structure allows for proper installation via pip and ensures all components are correctly importable.  
 - Privacy-first LLM workflows  
 - Auto weekly summaries
 
@@ -124,10 +148,25 @@ This one-click installer will:
 
 ### Option 3: Traditional Installation
    ```bash
+   # Clone the repository
    git clone https://github.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes
    cd Echo-Notes
-   ./install.sh
+   
+   # Create and activate a virtual environment
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   
+   # Install the package
+   pip install -e .
+   
+   # Start the daemon
+   echo-notes-daemon --daemon
+   
+   # Launch the dashboard
+   echo-notes-dashboard
    ```
+   
+   This method installs Echo-Notes as a proper Python package, making all components correctly importable.
 
 ## 🗑 Uninstallation
 

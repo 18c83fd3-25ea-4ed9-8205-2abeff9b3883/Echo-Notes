@@ -76,6 +76,15 @@ def setup_venv(install_dir):
     if not venv_dir.exists():
         print_color(Colors.BLUE, "Creating new virtual environment...")
         subprocess.run([sys.executable, "-m", "venv", str(venv_dir)], check=True)
+        
+        # Ensure Python executables have proper permissions
+        if detect_os() != "windows":
+            bin_dir = venv_dir / "bin"
+            for executable in ["python", "python3", "pip", "pip3"]:
+                exec_path = bin_dir / executable
+                if exec_path.exists():
+                    os.chmod(str(exec_path), 0o755)
+        
         print_color(Colors.GREEN, "Created virtual environment")
     
     # Upgrade pip

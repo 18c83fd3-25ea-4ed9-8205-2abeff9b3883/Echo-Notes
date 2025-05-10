@@ -193,6 +193,17 @@ def remove_venv(script_dir):
     else:
         print_color(Colors.YELLOW, "Virtual environment not found")
 
+def remove_package_dir(script_dir):
+    """Remove the echo_notes package directory"""
+    print_color(Colors.BLUE, "Removing echo_notes package directory...")
+    
+    package_path = script_dir / "echo_notes"
+    if package_path.exists():
+        shutil.rmtree(package_path, ignore_errors=True)
+        print_color(Colors.GREEN, "Removed echo_notes package directory")
+    else:
+        print_color(Colors.YELLOW, "echo_notes package directory not found")
+
 def main():
     """Main uninstallation process"""
     parser = argparse.ArgumentParser(description="Echo-Notes Unified Uninstaller")
@@ -236,6 +247,9 @@ def main():
     
     # Remove virtual environment
     remove_venv(script_dir)
+    
+    # Remove echo_notes package directory
+    remove_package_dir(script_dir)
     
     # Remove configuration files if not keeping them
     if not args.keep_config:

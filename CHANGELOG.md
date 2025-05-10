@@ -3,6 +3,9 @@
 ## [Unreleased]
 
 ### Added
+- Proper Python package structure with echo_notes module
+- Fixed virtual environment permissions in installer
+- Updated uninstaller to remove the echo_notes package directory
 - File browser button in the UI to allow users to choose a custom folder location for notes
 - Persistent storage of the selected notes directory in the configuration file
 - Automatic creation of the selected directory if it doesn't exist
