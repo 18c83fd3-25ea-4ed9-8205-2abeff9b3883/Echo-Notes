@@ -1,10 +1,11 @@
 
 # Echo-Notes
 
-### AI Notes with Nextcloud
+### Sync, Process, and Summarize Notes Privately and automatically with local AI
 
 **A privacy-first voice-to-text and note cleanup pipeline powered by local LLMs.**  
-Capture voice notes on your phone, sync them via Nextcloud, and automatically clean or structure them using a local language model.
+Type or capture voice-to-text notes on your phone or laptop.
+Sync them to your home computer via Nextcloud, Syncthing, or your method of choice. Then automatically clean, structure, and create To Do's with them using a local language model.
 
 ---
 
@@ -44,22 +45,22 @@ For users who want:
 
 ---
 
-Installation
+## Installation
 
 Option 1: One-Click Installer (Recommended)
-
+```bash
 curl -O https://raw.githubusercontent.com/.../install_echo_notes.py
 chmod +x install_echo_notes.py
 ./install_echo_notes.py
-
+```
 Installs the app, configures environment, sets up daemon and shortcuts.
 
 Option 2: Manual Installation
-
+```bash
 git clone https://github.com/.../Echo-Notes
 cd Echo-Notes
 python echo_notes_installer.py
-
+```
 Sets up environment, dependencies, and optional daemon.
 
 For advanced manual setup, see docs/manual_install.md.
@@ -67,7 +68,7 @@ For advanced manual setup, see docs/manual_install.md.
 
 ---
 
-Uninstallation
+## Uninstallation
 
 Run the generated uninstaller:
 
@@ -81,7 +82,7 @@ For full options and manual steps, see docs/uninstall.md.
 
 ---
 
-Features
+## Features
 
 Daily note cleanup and structuring
 
@@ -99,7 +100,7 @@ Daemon support for background operation
 
 ---
 
-Configuration
+## Configuration
 
 You can customize directories and behavior using environment variables:
 
@@ -116,7 +117,7 @@ generate-summary
 
 ---
 
-Advanced Scheduling & Launchers
+## Advanced Scheduling & Launchers
 
 Echo-Notes supports built-in scheduling via a daemon and optional cron or systemd setups.
 
@@ -125,7 +126,7 @@ For full scheduling setup (cron/systemd, dashboard launchers), see docs/scheduli
 
 ---
 
-Dashboard
+## Dashboard
 
 Features:
 
@@ -141,21 +142,21 @@ See docs/dashboard.md for usage and troubleshooting.
 
 ---
 
-Changelog
+## Changelog
 
 See CHANGELOG.md
 
 
 ---
 
-License
+## License
 
 MIT – free to use, modify, and share.
 
 
 ---
 
-Contributing
+## Contributing
 
 Open to:
 
