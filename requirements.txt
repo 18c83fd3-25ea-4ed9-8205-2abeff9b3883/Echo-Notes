@@ -1,3 +1,4 @@
 requests>=2.28.0       # for sending HTTP to LM Studio
 pytest>=7.0.0          # for unit testing
 flake8>=6.0.0          # for linting and CI checks
+PyQt6>=6.4.0           # for GUI dashboard

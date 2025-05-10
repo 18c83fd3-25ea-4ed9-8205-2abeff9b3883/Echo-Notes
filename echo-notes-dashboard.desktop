@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Echo Notes
+Comment=Monitor and control Echo-Notes daemon
+Exec=bash -c "cd $(dirname %k) && source echo_notes_venv/bin/activate && python echo_notes_dashboard.py"
+Icon=${HOME}/.local/share/icons/echo-notes.png
+Terminal=false
+Categories=Utility;
