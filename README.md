@@ -74,55 +74,100 @@ Echo-Notes/
 
 
 ## 🛠 Installation
-### Clone repository
+
+### Option 1: One-Click Installation (Recommended)
+Download and run the one-click installer:
+
+```bash
+# Download the installer
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/install_echo_notes.py
+
+# Make it executable
+chmod +x install_echo_notes.py
+
+# Run the installer
+./install_echo_notes.py
+```
+
+This one-click installer will:
+- Download the latest version of Echo-Notes
+- Install it to your preferred location
+- Set up the environment
+- Create desktop shortcuts
+- Start the daemon automatically
+- Create an uninstaller
+
+### Option 2: Manual Installation
+1. Download and extract Echo-Notes
    ```bash
    git clone https://github.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes
    cd Echo-Notes
    ```
-### Run the installation script:
+
+2. Run the unified installer
    ```bash
-   ./install.sh
+   python echo_notes_installer.py
    ```
-   This script will:
+   
+   This installer will:
    - Check for Python 3
    - Set up a virtual environment
    - Install dependencies
    - Configure the application
-   - Create desktop shortcuts (both standard and "direct" versions)
+   - Create desktop shortcuts
+   - Start the daemon automatically
+   - Create an uninstaller
 
-### Start using the application:
-   - Start the daemon: `echo-notes-daemon --daemon`
-   - Launch the dashboard: `echo-notes-dashboard` or use the **desktop shortcut**
+3. Start using the application:
+   - Launch the dashboard using the desktop shortcut
+   - Or run: `echo-notes-dashboard`
+
+### Option 3: Traditional Installation
+   ```bash
+   git clone https://github.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes
+   cd Echo-Notes
+   ./install.sh
+   ```
 
 ## 🗑 Uninstallation
-Echo-Notes provides multiple uninstallation options to accommodate different platforms and preferences.
 
-### Option 1: Bash Script (Linux/macOS/Git Bash on Windows)
+### Option 1: Simplified Uninstallation (Recommended)
+If you installed Echo-Notes using the unified installer, simply run the uninstaller:
+
+#### On Windows:
+```
+uninstall.bat
+```
+
+#### On Linux/macOS:
 ```bash
 ./uninstall.sh
 ```
 
-### Option 2: Batch File (Windows)
-```bash
-uninstall.bat
-```
+The uninstaller will:
+1. Stop any running Echo-Notes processes
+2. Remove desktop shortcuts and application menu entries
+3. Remove icons and symlinks
+4. Ask if you want to keep your notes (preserved by default)
 
-### Option 3: Python Script (All Platforms)
+### Option 2: Traditional Uninstallation
+Echo-Notes also provides additional uninstallation options:
+
 ```bash
+# Bash Script (Linux/macOS/Git Bash on Windows)
+./uninstall.sh
+
+# Batch File (Windows)
+uninstall.bat
+
+# Python Script (All Platforms)
 python uninstall.py
 ```
 
-All uninstallers support the following options:
+These scripts support additional options:
 - `--help` - Show help information
 - `--keep-config` - Uninstall but keep configuration files
 - `--purge` - Remove everything including notes (USE WITH CAUTION)
-
-The uninstallation process:
-1. Stops any running Echo-Notes processes
-2. Removes desktop shortcuts and application menu entries
-3. Removes icons and symlinks
-4. Removes the virtual environment
-5. Preserves your notes by default (unless --purge is specified)
 
 For detailed uninstallation instructions and options, see [UNINSTALL.md](UNINSTALL.md).
 
