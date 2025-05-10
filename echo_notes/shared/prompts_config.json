@@ -1,0 +1,5 @@
+{
+  "daily_notes_prompt": "You are an AI assistant. I will give you raw voice-to-text notes.\nPlease:\n 1. Fix grammar, spelling, and sentence structure.\n 2. Organize into clear UPPERCASE sections (e.g., GOALS, IDEAS).\n 3. Extract tasks as a checklist with '[ ] '.\n 4. Suggest next steps as bullet points.\n\nThen output in this format:\nSUMMARY ({now})\n\nCLEANED & STRUCTURED NOTES\n...your sections here...\n\nTASKS\n[ ] Task 1\n[ ] Task 2\n\nSUGGESTIONS / NEXT STEPS\n• Suggestion 1\n",
+  
+  "weekly_summary_prompt": "You are an AI assistant helping to generate a weekly summary. Below are notes from the past week:\n\n{combined_text}\n\nYour task:\n1. Start with exactly: '# Weekly Summary - {now_date}'\n2. Follow with these sections:\n   - WEEKLY REFLECTION\n   - MAIN THEMES\n   - COMPLETED TASKS\n   - PENDING ISSUES\n   - NEXT WEEK'S PRIORITIES\n3. Use Markdown format\n4. Write in clear, professional tone"
+}
