@@ -90,9 +90,43 @@ Echo-Notes/
    - Configure the application
    - Create desktop shortcuts (both standard and "direct" versions)
 
- ### Start using the application:
+### Start using the application:
    - Start the daemon: `echo-notes-daemon --daemon`
    - Launch the dashboard: `echo-notes-dashboard` or use the **desktop shortcut**
+
+## 🗑 Uninstallation
+Echo-Notes provides multiple uninstallation options to accommodate different platforms and preferences.
+
+### Option 1: Bash Script (Linux/macOS/Git Bash on Windows)
+```bash
+./uninstall.sh
+```
+
+### Option 2: Batch File (Windows)
+```bash
+uninstall.bat
+```
+
+### Option 3: Python Script (All Platforms)
+```bash
+python uninstall.py
+```
+
+All uninstallers support the following options:
+- `--help` - Show help information
+- `--keep-config` - Uninstall but keep configuration files
+- `--purge` - Remove everything including notes (USE WITH CAUTION)
+
+The uninstallation process:
+1. Stops any running Echo-Notes processes
+2. Removes desktop shortcuts and application menu entries
+3. Removes icons and symlinks
+4. Removes the virtual environment
+5. Preserves your notes by default (unless --purge is specified)
+
+For detailed uninstallation instructions and options, see [UNINSTALL.md](UNINSTALL.md).
+
+You can also run `./test_uninstall.py` to see what would be removed without actually uninstalling anything.
 
 ## 🔧 Scheduling Configuration
 
