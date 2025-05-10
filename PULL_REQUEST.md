@@ -36,6 +36,7 @@ This pull request addresses the installation permission issues that users have b
 
 ### 6. Added Testing
 - Created `test_package.py` to verify the package structure works correctly
+- Updated existing test files to work with the new package structure
 
 ## How to Test
 1. Download the installer:
