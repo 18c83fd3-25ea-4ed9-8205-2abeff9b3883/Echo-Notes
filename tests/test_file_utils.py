@@ -1,5 +1,6 @@
 from pathlib import Path
-from echo_notes import file_utils, config  # Adjust if using package layout
+from echo_notes.shared import file_utils
+from echo_notes.shared import config
 
 def test_note_processing(tmp_path):
     note = tmp_path / "test.md"
