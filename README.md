@@ -75,19 +75,25 @@ Echo-Notes/
 
 ## 🛠 Installation
 ### Clone repository
-```text
-git clone https://github.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes
+   ```bash
+   git clone https://github.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes
+   cd Echo-Notes
+   ```
+### Run the installation script:
+   ```bash
+   ./install.sh
+   ```
+   This script will:
+   - Check for Python 3
+   - Set up a virtual environment
+   - Install dependencies
+   - Configure the application
+   - Create desktop shortcuts (both standard and "direct" versions)
 
-cd Echo-Notes
-```
-### Install with pip (recommended)
-```text
-pip install -e .
-```
-### Alternative: Install requirements only
-```text
-pip install -r requirements.txt
-```
+ ### Start using the application:
+   - Start the daemon: `echo-notes-daemon --daemon`
+   - Launch the dashboard: `echo-notes-dashboard` or use the **desktop shortcut**
+
 ## 🔧 Scheduling Configuration
 
 Echo-Notes now supports two methods for scheduling note processing and summary generation:
