@@ -22,10 +22,12 @@ Capture voice notes on your phone, sync them via Nextcloud, and automatically cl
 - Auto weekly summaries
 
 **Upcoming:**
-- Optional journaling dashboard
 - Mood tracking integration
 - Sync install check
 - NextCloud app intergration???
+
+**Recently Added:**
+- GUI Dashboard for daemon control and monitoring
 
 ---
 
@@ -117,7 +119,38 @@ echo-notes-daemon --stop
 
 # Or start with the configuration option directly
 echo-notes-daemon --configure
+
+# Launch the GUI dashboard from command line
+echo-notes-dashboard
 ```
+
+### GUI Dashboard Shortcuts
+
+Echo-Notes now includes multiple ways to launch the dashboard without using the command line:
+
+#### Simple Double-Click Launcher (All Platforms):
+The easiest way to launch the dashboard is to simply double-click the `launcher.py` file in the Echo-Notes directory. This works on all platforms (Windows, macOS, Linux) and doesn't require any installation.
+
+#### Linux:
+```bash
+# Install desktop shortcut
+./install_desktop_shortcut.sh
+```
+After running this script, you'll find "Echo Notes Dashboard" in your applications menu.
+
+#### Windows:
+```bash
+# Create desktop shortcut
+create_windows_shortcut.bat
+```
+This will create a shortcut on your desktop that you can double-click to launch the dashboard.
+
+#### macOS:
+```bash
+# Create macOS application
+python create_macos_shortcut.py
+```
+This will create an application in your ~/Applications folder that you can launch like any other macOS app.
 
 The daemon reads scheduling settings from `shared/schedule_config.json`, which can be modified directly or through the configuration tool.
 
@@ -190,6 +223,13 @@ The following scheduling options can be configured:
 
 - Error-resilient processing
 - Customizable prompts for note processing
+
+### GUI Dashboard
+- Monitor daemon status (running/not running)
+- View timestamps of last processed note and weekly summary
+- Control buttons to start/stop daemon and trigger processing
+- Real-time log display
+- For details, see [dashboard_readme.md](dashboard_readme.md)
 
 ### Weekly Summary (generate-summary)
 - Aggregates 7 days of notes

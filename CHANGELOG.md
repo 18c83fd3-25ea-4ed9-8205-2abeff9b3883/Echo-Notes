@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file..
 
+## [0.5.1] - 2025-05-08
+
+### Added
+
+- Added simple cross-platform `launcher.py` script for double-click launching on all platforms
+- Added desktop shortcut creation scripts for Linux, Windows, and macOS
+- Added `echo-notes-dashboard.desktop` file for Linux desktop integration
+- Added `install_desktop_shortcut.sh` script for Linux shortcut installation
+- Added `create_windows_shortcut.bat` script for Windows desktop shortcut creation
+- Added `create_macos_shortcut.py` script for macOS application creation
+- Updated documentation with instructions for GUI launching without command line
+
+## [0.5.0] - 2024-05-08
+
+### Added
+
+- Added GUI dashboard for monitoring and controlling the Echo-Notes daemon
+- Added real-time status display showing daemon running state
+- Added timestamps for last processed note and weekly summary
+- Added control buttons to start/stop daemon and trigger processing
+- Added real-time log display in the dashboard
+- Added `echo-notes-dashboard` command to launch the GUI
+- Added PyQt6 dependency for the GUI components
+
+### Changed
+
+- Updated setup.py with new dashboard entry point
+- Updated README.md with dashboard documentation
+- Added detailed dashboard_readme.md with usage instructions
+
 ## [0.4.0] - 2024-05-07
 
 ### Added
