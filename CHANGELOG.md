@@ -9,6 +9,10 @@
 - Unified uninstaller scripts for all platforms (bash, batch, and Python versions)
 - Support for preserving user notes during uninstallation
 - Command-line options for uninstaller (--keep-config, --purge)
+- Simplified unified installer (echo_notes_installer.py) that works across all platforms
+- One-click installer script (install_echo_notes.py) that downloads and installs Echo-Notes
+- Automatic desktop shortcut creation during installation
+- Automatic daemon startup during installation
 
 ### Fixed
 - Desktop icon launcher issues with variable expansion in .desktop files
