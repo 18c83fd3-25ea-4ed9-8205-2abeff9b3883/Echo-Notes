@@ -40,7 +40,7 @@ For users who want:
 [Voice Input] → [Nextcloud Sync] → [Daily & Weekly Processing]
        ↓               ↓
     [Local LLM] → [Clean Markdown Output]
-
+```
 
 ---
 
