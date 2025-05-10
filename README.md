@@ -133,10 +133,29 @@ The easiest way to launch the dashboard is to simply double-click the `launcher.
 
 #### Linux:
 ```bash
-# Install desktop shortcut
-./install_desktop_shortcut.sh
+# Install desktop shortcuts
+./install_desktop_shortcuts.sh
 ```
-After running this script, you'll find "Echo Notes Dashboard" in your applications menu.
+After running this script, you'll find "Echo Notes Dashboard" in your applications menu and on your desktop.
+
+If you encounter issues with the desktop icon not launching the application, try one of these alternatives:
+
+1. Fix desktop icon issues:
+```bash
+# Fix desktop icon issues
+./fix_desktop_icon.sh
+```
+This script fixes path issues in the desktop shortcut by using absolute paths.
+
+2. Use the launcher script:
+```bash
+# Run the Python launcher
+python launcher.py
+```
+
+> **Note:** The desktop icon now directly uses the Python interpreter from the virtual environment, which is more reliable than using bash scripts. If you're upgrading from a previous version and the desktop icon doesn't work, run `./fix_desktop_icon.sh` to update it.
+>
+> Two desktop icons are created: a standard one and a "Direct" version. If the standard icon doesn't work, try the "Direct" version which is known to work reliably across different desktop environments.
 
 #### Windows:
 ```bash
