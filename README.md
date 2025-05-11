@@ -38,9 +38,13 @@ For users who want:
 ## How It Works
 
 ```text
-[Voice Input] → [Nextcloud Sync] → [Daily & Weekly Processing]
-       ↓               ↓
-    [Local LLM] → [Clean Markdown Output]
+[Voice or Text Input]  → [Daily & Weekly Processing]
+       ↓
+    [Sync]
+       ↓
+  [Local LLM] 
+       ↓
+[Clean Markdown Output]
 ```
 
 ---
