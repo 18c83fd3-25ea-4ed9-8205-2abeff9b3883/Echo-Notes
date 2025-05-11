@@ -1,11 +1,13 @@
 
 # Echo-Notes
 
-### Sync, Process, and Summarize Notes Privately and automatically with local AI
+### Sync, Process, and Summarize Notes, Files, Emails Privately and automatically with local AI
 
-**A privacy-first voice-to-text and note cleanup pipeline powered by local LLMs.**  
-Type or capture voice-to-text notes on your phone or laptop.
-Sync them to your home computer via Nextcloud, Syncthing, or your method of choice. Then automatically clean, structure, and create To Do's with them using a local language model.
+**A privacy-first voice-to-text, file, and note cleanup pipeline powered by local LLMs.**  
+- Type or capture voice-to-text notes on your phone or laptop.
+- Sync them to your home computer via Nextcloud, Syncthing, or your method of choice.
+- Or Drop emails, files, or articles into the folder.
+- Then automatically clean, structure, summarize, or create To Do's with them using a local language model.
 
 ---
 
@@ -28,9 +30,8 @@ Sync them to your home computer via Nextcloud, Syncthing, or your method of choi
 ## Why Echo-Notes?
 
 For users who want:
-- 100% local, private AI-based note processing
-- Nextcloud integration
-- Clean, modular Python architecture
+- 100% local, private AI-based note and file processing
+- Clean, modular architecture
 - Zero reliance on cloud services
 
 ---
