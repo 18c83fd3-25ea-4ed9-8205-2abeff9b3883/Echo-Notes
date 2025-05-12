@@ -6,7 +6,7 @@
 - Type or capture voice-to-text notes on your phone or laptop.
 - Sync them to your home computer via Nextcloud, Syncthing, or your method of choice.
 - Or Drop emails, files, or articles into the folder.
-- Then automatically clean, structure, summarize, or create To Do's with them using a local language model.
+- Then automatically clean, structure, summarize, or create To Do's with them using a local language model..
 
 ---
 
