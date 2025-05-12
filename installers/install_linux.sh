@@ -187,9 +187,9 @@ from installers.linux.linux_installer import install_linux
 
 # Set up options
 options = {
-    "no_shortcuts": ${NO_SHORTCUTS},
-    "no_symlinks": ${NO_SYMLINKS},
-    "no_service": ${NO_SERVICE}
+    "no_shortcuts": True if "${NO_SHORTCUTS}" == "true" else False,
+    "no_symlinks": True if "${NO_SYMLINKS}" == "true" else False,
+    "no_service": True if "${NO_SERVICE}" == "true" else False
 }
 
 # Run the installer

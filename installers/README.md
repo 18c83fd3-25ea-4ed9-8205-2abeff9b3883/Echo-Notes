@@ -1,6 +1,6 @@
 # Echo-Notes Installer Framework
 
-This directory contains the new modular installer framework for Echo-Notes. The framework is designed to provide a consistent installation experience across different operating systems while maintaining platform-specific functionality where needed.
+This directory contains the new modular installer framework for Echo-Notes. The framework is designed to provide a consistent installation experience across different operating systems while maintaining platform-specific functionality where needed..
 
 ## Directory Structure
 

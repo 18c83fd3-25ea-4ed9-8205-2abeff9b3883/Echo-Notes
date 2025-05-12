@@ -52,12 +52,14 @@ For users who want:
 ## Installation
 
 > **Note:** Echo-Notes has recently migrated to a new modular installer framework. The instructions below use the new installers. For information about migrating from the old installers, see [MIGRATION.md](MIGRATION.md).
+>
+> **Having trouble?** See our [Quick Installation Guide](Docs/quick_install_guide.md) for simplified instructions and troubleshooting tips.
 
 ### Windows
 
 ```bash
 # Download the installer
-curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/Echo-Notes/installers/install_windows.py
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/installers/install_windows.py
 
 # Run the installer
 python install_windows.py
@@ -79,7 +81,7 @@ python install_windows.py install --install-dir "C:\Echo-Notes" --no-shortcut --
 
 ```bash
 # Download the installer
-curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/Echo-Notes/installers/install_macos.sh
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/installers/install_macos.sh
 
 # Make it executable
 chmod +x install_macos.sh
@@ -102,7 +104,7 @@ Command-line options:
 
 ```bash
 # Download the installer
-curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/Echo-Notes/installers/install_linux.sh
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/installers/install_linux.sh
 
 # Make it executable
 chmod +x install_linux.sh
