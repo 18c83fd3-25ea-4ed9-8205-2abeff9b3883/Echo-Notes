@@ -21,9 +21,9 @@ from PyQt6.QtCore import Qt, QTimer, pyqtSlot, QSize, pyqtSignal, QObject, QMeta
 from PyQt6.QtGui import QFont, QIcon, QColor, QPalette
 
 # Import Echo-Notes modules
-sys.path.append(str(Path(__file__).parent))
-from shared import config
-from shared.config import SCHEDULE_CONFIG
+# Import Echo-Notes modules
+from echo_notes.shared import config
+from echo_notes.shared.config import SCHEDULE_CONFIG
 
 # Set up logging
 logging.basicConfig(
