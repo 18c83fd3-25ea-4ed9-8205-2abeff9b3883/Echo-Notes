@@ -12,7 +12,7 @@
 - Fixed environment variable handling in the Python download script to correctly use the installation directory
 - Enhanced the installer to create uninstaller scripts on-the-fly if they're not found in the repository
 - Improved uninstaller script search to look in multiple locations
-- Added debugging output to help diagnose uninstaller script creation issues
+- Added comprehensive debugging output throughout the installer script to diagnose execution flow issues
 - Updated uninstallation documentation with correct formatting and instructions
 
 ### Added

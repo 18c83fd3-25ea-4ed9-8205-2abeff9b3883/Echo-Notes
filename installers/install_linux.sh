@@ -701,12 +701,15 @@ sys.exit(0 if success else 1)
 EOF
 
 # Run the installer script
+echo -e "${YELLOW}Debug: About to run Python installer script${NC}"
 "$PYTHON_CMD" "$TEMP_SCRIPT"
 INSTALL_RESULT=$?
+echo -e "${YELLOW}Debug: Python installer script completed with result: $INSTALL_RESULT${NC}"
 rm "$TEMP_SCRIPT"
 
 if [ $INSTALL_RESULT -eq 0 ]; then
     echo -e "${GREEN}Installation completed successfully!${NC}"
+    echo -e "${YELLOW}Debug: Entering successful installation block${NC}"
     
     # Copy the uninstaller scripts to the user's home directory
     echo -e "${BLUE}Installing uninstaller scripts...${NC}"
@@ -1115,8 +1118,12 @@ EOF
         echo -e "or run 'source ~/.bashrc' for the PATH changes to take effect.${NC}"
     fi
     
+    echo -e "${YELLOW}Debug: Exiting successful installation block${NC}"
     exit 0
 else
     echo -e "${RED}Installation failed with error code: $INSTALL_RESULT${NC}"
+    echo -e "${YELLOW}Debug: Exiting failed installation block${NC}"
     exit 1
 fi
+
+echo -e "${YELLOW}Debug: This line should never be reached${NC}"
