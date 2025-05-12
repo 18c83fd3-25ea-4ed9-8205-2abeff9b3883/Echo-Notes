@@ -57,7 +57,7 @@ For users who want:
 
 ```bash
 # Download the installer
-curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/installers/install_windows.py
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/Echo-Notes/installers/install_windows.py
 
 # Run the installer
 python install_windows.py
@@ -79,7 +79,7 @@ python install_windows.py install --install-dir "C:\Echo-Notes" --no-shortcut --
 
 ```bash
 # Download the installer
-curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/installers/install_macos.sh
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/Echo-Notes/installers/install_macos.sh
 
 # Make it executable
 chmod +x install_macos.sh
@@ -102,7 +102,7 @@ Command-line options:
 
 ```bash
 # Download the installer
-curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/installers/install_linux.sh
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/Echo-Notes/installers/install_linux.sh
 
 # Make it executable
 chmod +x install_linux.sh
@@ -130,13 +130,13 @@ You can test the installation process without making any changes to your system 
 
 ```bash
 # Test installation on your platform
-python installers/test_framework.py --mode install
+python Echo-Notes/installers/test_framework.py --mode install
 
 # Test uninstallation on your platform
-python installers/test_framework.py --mode uninstall
+python Echo-Notes/installers/test_framework.py --mode uninstall
 
 # Test on a specific platform
-python installers/test_framework.py --mode install --platform windows|macos|linux
+python Echo-Notes/installers/test_framework.py --mode install --platform windows|macos|linux
 ```
 
 This is useful for verifying that the installation will work correctly on your system before actually performing it.

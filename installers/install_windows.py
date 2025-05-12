@@ -308,7 +308,7 @@ class InstallerGUI:
             }
 
             # Check if we need to download Echo-Notes
-            if not (install_dir / "echo_notes_dashboard.py").exists():
+            if not (install_dir / "echo_notes" / "dashboard.py").exists():
                 print_color(Colors.BLUE, "Downloading Echo-Notes...")
                 download_dir = download_echo_notes(install_dir)
                 if not download_dir:
@@ -394,7 +394,7 @@ class InstallerGUI:
             # Check if Echo-Notes is installed
             if (
                 not install_dir.exists()
-                or not (install_dir / "echo_notes_dashboard.py").exists()
+                or not (install_dir / "echo_notes" / "dashboard.py").exists()
             ):
                 print_color(Colors.YELLOW, f"Echo-Notes not found at {install_dir}")
 
