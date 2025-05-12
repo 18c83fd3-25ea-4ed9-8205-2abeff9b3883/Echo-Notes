@@ -13,7 +13,11 @@
 - Enhanced the installer to create uninstaller scripts on-the-fly if they're not found in the repository
 - Improved uninstaller script search to look in multiple locations
 - Added comprehensive debugging output throughout the installer script to diagnose execution flow issues
+- Created a wrapper script (install_echo_notes.sh) that ensures uninstaller scripts are created regardless of installer behavior
 - Updated uninstallation documentation with correct formatting and instructions
+
+### Added
+- Added install_echo_notes.sh wrapper script that downloads and runs the installer, then creates uninstaller scripts
 
 ### Added
 - Added Docs/quick_install_guide.md with simplified installation instructions and troubleshooting tips

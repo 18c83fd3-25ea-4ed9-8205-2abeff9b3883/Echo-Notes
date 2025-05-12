@@ -15,6 +15,19 @@ chmod +x install_linux.sh
 ./install_linux.sh
 ```
 
+Alternatively, you can use our wrapper script which ensures uninstaller scripts are properly created:
+
+```bash
+# Download the wrapper script
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/install_echo_notes.sh
+
+# Make it executable
+chmod +x install_echo_notes.sh
+
+# Run the wrapper script
+./install_echo_notes.sh
+```
+
 The Linux installer will:
 - Create desktop shortcuts and application menu entries
 - Set up symlinks in ~/.local/bin
