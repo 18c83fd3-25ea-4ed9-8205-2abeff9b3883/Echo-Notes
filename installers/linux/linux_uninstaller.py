@@ -41,12 +41,12 @@ def stop_running_processes():
 
         # Kill any remaining processes
         subprocess.run(
-            ["pkill", "-f", "echo_notes_daemon.py"],
+            ["pkill", "-f", "echo_notes/daemon.py"],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
         subprocess.run(
-            ["pkill", "-f", "echo_notes_dashboard.py"],
+            ["pkill", "-f", "echo_notes/dashboard.py"],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )

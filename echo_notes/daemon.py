@@ -11,8 +11,8 @@ import subprocess
 import atexit
 from pathlib import Path
 
-from shared import config
-from shared.config import SCHEDULE_CONFIG
+from echo_notes.shared import config
+from echo_notes.shared.config import SCHEDULE_CONFIG
 
 # Set up logging
 logging.basicConfig(
