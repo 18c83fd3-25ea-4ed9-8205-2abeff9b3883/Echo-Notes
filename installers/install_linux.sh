@@ -93,16 +93,110 @@ else
     
     # Create a temporary Python script to download the repository
     TEMP_SCRIPT=$(mktemp)
-    cat > "$TEMP_SCRIPT" << EOF
-import sys
+    cat > "$TEMP_SCRIPT" << 'EOF'
 import os
+import sys
+import tempfile
+import urllib.request
+import zipfile
+import io
+import shutil
+import ssl
 from pathlib import Path
 
-# Add the parent directory to the path
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, parent_dir)
+# ANSI color codes
+class Colors:
+    GREEN = "\033[0;32m"
+    YELLOW = "\033[1;33m"
+    RED = "\033[0;31m"
+    BLUE = "\033[0;34m"
+    NC = "\033[0m"  # No Color
 
-from installers.common.download_manager import download_echo_notes
+def print_color(color, message):
+    """Print colored message if supported"""
+    if sys.platform != "win32" or os.environ.get("TERM") == "xterm":
+        print(f"{color}{message}{Colors.NC}")
+    else:
+        print(message)
+
+def download_echo_notes(install_dir=None):
+    """Download Echo-Notes repository"""
+    repo_url = "https://github.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes"
+    branch = "main"
+    
+    print_color(Colors.BLUE, "Downloading Echo-Notes...")
+    
+    # Create a temporary directory
+    temp_dir = tempfile.mkdtemp()
+    print(f"Using temporary directory: {temp_dir}")
+    
+    try:
+        # Construct the download URL
+        url = f"{repo_url}/archive/refs/heads/{branch}.zip"
+        print_color(Colors.YELLOW, f"Downloading from: {url}")
+        
+        # Create a context that doesn't verify SSL certificates if needed
+        context = ssl._create_unverified_context() if hasattr(ssl, "_create_unverified_context") else None
+        
+        # Download the zip file
+        with urllib.request.urlopen(url, context=context) as response:
+            zip_data = response.read()
+        
+        # Extract the ZIP file
+        with zipfile.ZipFile(io.BytesIO(zip_data)) as zip_ref:
+            zip_ref.extractall(temp_dir)
+        
+        # Find the extracted directory
+        extracted_dirs = [d for d in os.listdir(temp_dir) if os.path.isdir(os.path.join(temp_dir, d))]
+        
+        if not extracted_dirs:
+            print_color(Colors.RED, "Error: Could not find extracted directory.")
+            return None
+        
+        extracted_dir = os.path.join(temp_dir, extracted_dirs[0])
+        print_color(Colors.GREEN, f"Downloaded and extracted to: {extracted_dir}")
+        
+        # If no install_dir provided, use the current directory
+        if install_dir is None:
+            install_dir = Path.cwd()
+        else:
+            install_dir = Path(install_dir)
+        
+        # Copy files to installation directory
+        print_color(Colors.YELLOW, f"Copying files to: {install_dir}")
+        
+        try:
+            # Create installation directory if it doesn't exist
+            os.makedirs(install_dir, exist_ok=True)
+            
+            # Copy files to installation directory
+            for item in os.listdir(extracted_dir):
+                src = os.path.join(extracted_dir, item)
+                dst = os.path.join(install_dir, item)
+                
+                if os.path.isdir(src):
+                    if os.path.exists(dst):
+                        shutil.rmtree(dst)
+                    shutil.copytree(src, dst)
+                else:
+                    shutil.copy2(src, dst)
+            
+            print_color(Colors.GREEN, "Files copied successfully")
+            
+            # Clean up temporary files
+            print_color(Colors.YELLOW, "Cleaning up temporary files...")
+            shutil.rmtree(temp_dir, ignore_errors=True)
+            print_color(Colors.GREEN, "Temporary files cleaned up")
+            
+            return install_dir
+            
+        except Exception as e:
+            print_color(Colors.RED, f"Error copying files: {e}")
+            return None
+            
+    except Exception as e:
+        print_color(Colors.RED, f"Error downloading Echo-Notes: {e}")
+        return None
 
 # Download Echo-Notes
 install_dir = "${INSTALL_DIR}" if "${INSTALL_DIR}" else None
@@ -174,16 +268,393 @@ fi
 
 # Create a temporary Python script to run the installer
 TEMP_SCRIPT=$(mktemp)
-cat > "$TEMP_SCRIPT" << EOF
-import sys
+cat > "$TEMP_SCRIPT" << 'EOF'
 import os
+import sys
+import platform
+import subprocess
+import shutil
+import venv
 from pathlib import Path
 
-# Add the parent directory to the path
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, parent_dir)
+# ANSI color codes
+class Colors:
+    GREEN = "\033[0;32m"
+    YELLOW = "\033[1;33m"
+    RED = "\033[0;31m"
+    BLUE = "\033[0;34m"
+    NC = "\033[0m"  # No Color
 
-from installers.linux.linux_installer import install_linux
+def print_color(color, message):
+    """Print colored message if supported"""
+    if sys.platform != "win32" or os.environ.get("TERM") == "xterm":
+        print(f"{color}{message}{Colors.NC}")
+    else:
+        print(message)
+
+def check_python_version(min_version=(3, 7)):
+    """Check if the current Python version meets the minimum requirement."""
+    if sys.version_info < min_version:
+        print_color(Colors.RED, f"Error: Python {min_version[0]}.{min_version[1]} or higher is required.")
+        print_color(Colors.RED, f"Current Python version: {sys.version}")
+        return False
+    print_color(Colors.GREEN, f"Python version check passed: {sys.version}")
+    return True
+
+def test_pip(pip_path):
+    """Test if pip is working in a virtual environment."""
+    try:
+        subprocess.run([str(pip_path), "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        return True
+    except (subprocess.SubprocessError, FileNotFoundError):
+        return False
+
+def create_virtual_environment(install_dir, venv_name="echo_notes_venv"):
+    """Create a Python virtual environment."""
+    install_dir = Path(install_dir)
+    venv_path = install_dir / venv_name
+    
+    print_color(Colors.BLUE, "Setting up virtual environment...")
+    
+    # Remove existing virtual environment if it's broken
+    if venv_path.exists():
+        # Test if pip is working in the existing venv
+        os_type = platform.system().lower()
+        pip_path = venv_path / ("Scripts" if os_type == "windows" else "bin") / "pip"
+        
+        if not pip_path.exists() or not test_pip(pip_path):
+            print_color(Colors.YELLOW, "Existing virtual environment appears to be broken. Recreating...")
+            shutil.rmtree(venv_path, ignore_errors=True)
+        else:
+            print_color(Colors.YELLOW, "Using existing virtual environment")
+            return venv_path
+    
+    # Create virtual environment if it doesn't exist
+    if not venv_path.exists():
+        print_color(Colors.BLUE, "Creating new virtual environment...")
+        try:
+            venv.create(venv_path, with_pip=True)
+            print_color(Colors.GREEN, "Created virtual environment")
+        except Exception as e:
+            print_color(Colors.RED, f"Error creating virtual environment: {e}")
+            return None
+    
+    return venv_path
+
+def install_dependencies(venv_path, requirements_file=None, dev_mode=True):
+    """Install dependencies in the virtual environment."""
+    print_color(Colors.BLUE, "Installing dependencies...")
+    
+    os_type = platform.system().lower()
+    pip_path = venv_path / ("Scripts" if os_type == "windows" else "bin") / "pip"
+    
+    # Upgrade pip
+    try:
+        subprocess.run([str(pip_path), "install", "--upgrade", "pip"], check=True)
+        print_color(Colors.GREEN, "Pip upgraded successfully")
+    except subprocess.SubprocessError as e:
+        print_color(Colors.RED, f"Error upgrading pip: {e}")
+        return False
+    
+    # Install required packages
+    try:
+        subprocess.run([str(pip_path), "install", "requests", "python-dateutil", "PyQt6"], check=True)
+        print_color(Colors.GREEN, "Installed core dependencies")
+    except subprocess.SubprocessError as e:
+        print_color(Colors.RED, f"Error installing core dependencies: {e}")
+        return False
+    
+    # Install from requirements.txt if available
+    if requirements_file and Path(requirements_file).exists():
+        try:
+            subprocess.run([str(pip_path), "install", "-r", str(requirements_file)], check=True)
+            print_color(Colors.GREEN, "Installed dependencies from requirements.txt")
+        except subprocess.SubprocessError as e:
+            print_color(Colors.RED, f"Error installing from requirements.txt: {e}")
+            return False
+    
+    # Install the package in development mode
+    if dev_mode:
+        try:
+            subprocess.run([str(pip_path), "install", "-e", "."], check=True)
+            print_color(Colors.GREEN, "Installed Echo-Notes in development mode")
+        except subprocess.SubprocessError as e:
+            print_color(Colors.RED, f"Error installing in development mode: {e}")
+            return False
+    
+    return True
+
+def configure_application(install_dir):
+    """Configure the Echo-Notes application."""
+    print_color(Colors.BLUE, "Configuring Echo-Notes...")
+    install_dir = Path(install_dir)
+    
+    # Create default configuration if needed
+    config_dir = install_dir / "shared"
+    config_file = config_dir / "schedule_config.json"
+    
+    if not config_dir.exists():
+        config_dir.mkdir(parents=True, exist_ok=True)
+    
+    if not config_file.exists():
+        default_config = """{
+    "processing_interval": 60,
+    "summary_interval": 10080,
+    "summary_day": 6,
+    "summary_hour": 12,
+    "daemon_enabled": true
+}"""
+        try:
+            with open(config_file, "w") as f:
+                f.write(default_config)
+            print_color(Colors.GREEN, "Created default schedule configuration")
+        except IOError as e:
+            print_color(Colors.RED, f"Error creating configuration file: {e}")
+            return False
+    
+    # Ensure the notes directory exists
+    notes_dir = os.environ.get("ECHO_NOTES_DIR", str(Path.home() / "Documents/notes/log"))
+    try:
+        os.makedirs(notes_dir, exist_ok=True)
+        print_color(Colors.GREEN, f"Ensured notes directory exists: {notes_dir}")
+    except OSError as e:
+        print_color(Colors.RED, f"Error creating notes directory: {e}")
+        return False
+    
+    return True
+
+def create_desktop_shortcuts(install_dir, venv_path):
+    """Create Linux desktop shortcuts and application menu entries."""
+    print_color(Colors.BLUE, "Creating desktop shortcuts and application menu entries...")
+    
+    try:
+        # Install the icon
+        icons_dir = Path.home() / ".local/share/icons"
+        os.makedirs(icons_dir, exist_ok=True)
+        
+        icon_path = install_dir / "Echo-Notes-Icon.png"
+        if icon_path.exists():
+            shutil.copy(icon_path, icons_dir / "echo-notes.png")
+            print_color(Colors.GREEN, f"Installed icon to {icons_dir}/echo-notes.png")
+        else:
+            print_color(Colors.YELLOW, "Icon file not found, shortcuts will use default icon")
+        
+        # Create applications directory if it doesn't exist
+        applications_dir = Path.home() / ".local/share/applications"
+        os.makedirs(applications_dir, exist_ok=True)
+        
+        # Create desktop entry file
+        desktop_file_path = applications_dir / "echo-notes.desktop"
+        with open(desktop_file_path, "w") as f:
+            f.write(f"""[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Echo Notes
+Comment=Monitor and control Echo-Notes daemon
+Exec={venv_path}/bin/python {install_dir}/echo_notes/dashboard.py
+Icon={Path.home()}/.local/share/icons/echo-notes.png
+Terminal=false
+Categories=Utility;
+""")
+        
+        # Make the desktop file executable
+        os.chmod(desktop_file_path, 0o755)
+        
+        # Create desktop icon if Desktop directory exists
+        desktop_dir = Path.home() / "Desktop"
+        if desktop_dir.exists():
+            desktop_icon_path = desktop_dir / "Echo Notes.desktop"
+            shutil.copy(desktop_file_path, desktop_icon_path)
+            os.chmod(desktop_icon_path, 0o755)
+            print_color(Colors.GREEN, f"Created desktop icon at {desktop_icon_path}")
+        
+        # Update desktop database if command exists
+        try:
+            subprocess.run(["update-desktop-database", str(applications_dir)], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception:
+            pass
+        
+        print_color(Colors.GREEN, "Desktop shortcuts created successfully")
+        return True
+    except Exception as e:
+        print_color(Colors.RED, f"Error creating desktop shortcuts: {e}")
+        return False
+
+def create_symlinks(install_dir, venv_path):
+    """Create symlinks in ~/.local/bin for Echo-Notes executables."""
+    print_color(Colors.BLUE, "Creating symlinks in ~/.local/bin...")
+    
+    try:
+        # Create ~/.local/bin if it doesn't exist
+        bin_dir = Path.home() / ".local/bin"
+        os.makedirs(bin_dir, exist_ok=True)
+        
+        # Create symlinks
+        symlinks = {
+            "echo-notes-dashboard": install_dir / "echo_notes/dashboard.py",
+            "echo-notes-daemon": install_dir / "echo_notes/daemon.py",
+            "echo-notes-python": venv_path / "bin" / "python",
+        }
+        
+        for name, target in symlinks.items():
+            symlink_path = bin_dir / name
+            
+            # Remove existing symlink if it exists
+            if symlink_path.exists() or symlink_path.is_symlink():
+                os.unlink(symlink_path)
+            
+            # Create new symlink
+            os.symlink(target, symlink_path)
+            os.chmod(symlink_path, 0o755)
+            print_color(Colors.GREEN, f"Created symlink: {symlink_path} -> {target}")
+        
+        # Add ~/.local/bin to PATH if not already there
+        path_updated = False
+        for shell_rc in [".bashrc", ".zshrc", ".profile"]:
+            rc_file = Path.home() / shell_rc
+            if rc_file.exists():
+                with open(rc_file, "r") as f:
+                    content = f.read()
+                
+                if 'PATH="$HOME/.local/bin:$PATH"' not in content and "PATH=$HOME/.local/bin:$PATH" not in content:
+                    with open(rc_file, "a") as f:
+                        f.write('\n# Added by Echo-Notes installer\nexport PATH="$HOME/.local/bin:$PATH"\n')
+                    path_updated = True
+        
+        if path_updated:
+            print_color(Colors.YELLOW, "Added ~/.local/bin to PATH in shell configuration files")
+            print_color(Colors.YELLOW, "You may need to restart your terminal or run 'source ~/.bashrc' for changes to take effect")
+        
+        print_color(Colors.GREEN, "Symlinks created successfully")
+        return True
+    except Exception as e:
+        print_color(Colors.RED, f"Error creating symlinks: {e}")
+        return False
+
+def setup_systemd_service(install_dir, venv_path):
+    """Set up Echo-Notes daemon as a systemd user service."""
+    print_color(Colors.BLUE, "Setting up Echo-Notes daemon service...")
+    
+    try:
+        # Create systemd user directory if it doesn't exist
+        systemd_dir = Path.home() / ".config/systemd/user"
+        os.makedirs(systemd_dir, exist_ok=True)
+        
+        # Create service file
+        service_file_path = systemd_dir / "echo-notes.service"
+        with open(service_file_path, "w") as f:
+            f.write(f"""[Unit]
+Description=Echo-Notes Daemon Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart={venv_path}/bin/python {install_dir}/echo_notes/daemon.py --daemon
+Restart=on-failure
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
+""")
+        
+        # Enable and start the service
+        try:
+            subprocess.run(["systemctl", "--user", "daemon-reload"], check=True)
+            subprocess.run(["systemctl", "--user", "enable", "echo-notes.service"], check=True)
+            subprocess.run(["systemctl", "--user", "start", "echo-notes.service"], check=True)
+            
+            print_color(Colors.GREEN, "Echo-Notes daemon service set up and started")
+            return True
+        except subprocess.SubprocessError as e:
+            print_color(Colors.YELLOW, f"Could not set up systemd service: {e}")
+            print_color(Colors.YELLOW, "Setting up alternative startup method...")
+            
+            # Create autostart directory if it doesn't exist
+            autostart_dir = Path.home() / ".config/autostart"
+            os.makedirs(autostart_dir, exist_ok=True)
+            
+            # Create autostart entry
+            autostart_file_path = autostart_dir / "echo-notes-daemon.desktop"
+            with open(autostart_file_path, "w") as f:
+                f.write(f"""[Desktop Entry]
+Type=Application
+Name=Echo Notes Daemon
+Comment=Echo-Notes background service
+Exec={venv_path}/bin/python {install_dir}/echo_notes/daemon.py --daemon
+Terminal=false
+Hidden=false
+X-GNOME-Autostart-enabled=true
+""")
+            
+            # Start the daemon now
+            try:
+                subprocess.Popen([f"{venv_path}/bin/python", f"{install_dir}/echo_notes/daemon.py", "--daemon"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                print_color(Colors.GREEN, "Echo-Notes daemon started and set to run at login")
+                return True
+            except Exception as e2:
+                print_color(Colors.RED, f"Error starting daemon: {e2}")
+                print_color(Colors.YELLOW, "You can start the daemon manually using:")
+                print(f"{venv_path}/bin/python {install_dir}/echo_notes/daemon.py --daemon")
+                return False
+    except Exception as e:
+        print_color(Colors.RED, f"Error setting up daemon service: {e}")
+        print_color(Colors.YELLOW, "You can start the daemon manually using:")
+        print(f"{venv_path}/bin/python {install_dir}/echo_notes/daemon.py --daemon")
+        return False
+
+def install_linux(install_dir, options):
+    """Perform Linux-specific installation."""
+    # Check Python version
+    if not check_python_version():
+        return False
+    
+    install_dir = Path(install_dir)
+    print_color(Colors.BLUE, f"Installing Echo-Notes to {install_dir}...")
+    
+    # Create virtual environment
+    venv_path = create_virtual_environment(install_dir)
+    if not venv_path:
+        return False
+    
+    # Install dependencies
+    requirements_file = install_dir / "requirements.txt"
+    if not install_dependencies(venv_path, requirements_file):
+        return False
+    
+    # Configure application
+    if not configure_application(install_dir):
+        return False
+    
+    # Create desktop shortcuts
+    if not options.get("no_shortcuts", False):
+        create_desktop_shortcuts(install_dir, venv_path)
+    else:
+        print_color(Colors.YELLOW, "Skipping desktop shortcuts creation as requested")
+    
+    # Create symlinks
+    if not options.get("no_symlinks", False):
+        create_symlinks(install_dir, venv_path)
+    else:
+        print_color(Colors.YELLOW, "Skipping symlink creation as requested")
+    
+    # Set up systemd service
+    if not options.get("no_service", False):
+        setup_systemd_service(install_dir, venv_path)
+    else:
+        print_color(Colors.YELLOW, "Skipping service setup as requested")
+    
+    print_color(Colors.GREEN, "Linux installation completed successfully!")
+    print("")
+    print_color(Colors.BLUE, "=== Getting Started ===")
+    print("1. The Echo-Notes daemon has been set up to start automatically at login")
+    print("2. Launch the dashboard using the desktop shortcut or application menu")
+    print("3. You can also run the dashboard directly with:")
+    print(f"   {venv_path}/bin/python {install_dir}/echo_notes/dashboard.py")
+    print("")
+    
+    return True
 
 # Set up options
 options = {
