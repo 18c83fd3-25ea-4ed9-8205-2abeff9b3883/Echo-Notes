@@ -63,7 +63,7 @@ def create_windows_shortcut(
 $WshShell = New-Object -ComObject WScript.Shell
 $Shortcut = $WshShell.CreateShortcut([Environment]::GetFolderPath('Desktop') + '\\{shortcut_name}.lnk')
 $Shortcut.TargetPath = '{venv_path / "Scripts/pythonw.exe"}'
-$Shortcut.Arguments = '"{install_dir / "echo_notes_dashboard.py"}"'
+$Shortcut.Arguments = '"{install_dir / "echo_notes/dashboard.py"}"'
 $Shortcut.WorkingDirectory = '{install_dir}'
 $Shortcut.IconLocation = '{install_dir / "Echo-Notes-Icon.png"}'
 $Shortcut.Save()
@@ -75,7 +75,7 @@ if (!(Test-Path $StartMenuPath)) {{
 }}
 $StartMenuShortcut = $WshShell.CreateShortcut("$StartMenuPath\\{shortcut_name}.lnk")
 $StartMenuShortcut.TargetPath = '{venv_path / "Scripts/pythonw.exe"}'
-$StartMenuShortcut.Arguments = '"{install_dir / "echo_notes_dashboard.py"}"'
+$StartMenuShortcut.Arguments = '"{install_dir / "echo_notes/dashboard.py"}"'
 $StartMenuShortcut.WorkingDirectory = '{install_dir}'
 $StartMenuShortcut.IconLocation = '{install_dir / "Echo-Notes-Icon.png"}'
 $StartMenuShortcut.Save()
@@ -229,7 +229,7 @@ def setup_windows_service(install_dir, venv_path):
         with open(service_script, "w") as f:
             f.write(
                 f"""@echo off
-"{venv_path / "Scripts/python.exe"}" "{install_dir / "echo_notes_daemon.py"}" --daemon
+"{venv_path / "Scripts/python.exe"}" "{install_dir / "echo_notes/daemon.py"}" --daemon
 """
             )
 
@@ -274,7 +274,7 @@ def setup_windows_service(install_dir, venv_path):
         subprocess.run(
             [
                 str(venv_path / "Scripts/python.exe"),
-                str(install_dir / "echo_notes_daemon.py"),
+                str(install_dir / "echo_notes/daemon.py"),
                 "--daemon",
             ],
             check=True,
@@ -286,7 +286,7 @@ def setup_windows_service(install_dir, venv_path):
         print_color(Colors.RED, f"Error setting up Windows service: {e}")
         print_color(Colors.YELLOW, "You can still start the daemon manually using:")
         print(
-            f'"{venv_path / "Scripts/python.exe"}" "{install_dir / "echo_notes_daemon.py"}" --daemon'
+            f'"{venv_path / "Scripts/python.exe"}" "{install_dir / "echo_notes/daemon.py"}" --daemon'
         )
         return False
 
@@ -353,7 +353,7 @@ def install_windows(install_dir=None, options=None):
     print("2. Launch the dashboard using the desktop shortcut or Start Menu entry")
     print("3. You can also run the dashboard directly with:")
     print(
-        f'   "{venv_path / "Scripts/python.exe"}" "{install_dir / "echo_notes_dashboard.py"}"'
+        f'   "{venv_path / "Scripts/python.exe"}" "{install_dir / "echo_notes/dashboard.py"}"'
     )
     print("")
 

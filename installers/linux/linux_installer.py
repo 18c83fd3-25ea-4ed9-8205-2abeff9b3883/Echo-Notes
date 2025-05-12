@@ -63,7 +63,7 @@ Version=1.0
 Type=Application
 Name=Echo Notes
 Comment=Monitor and control Echo-Notes daemon
-Exec={venv_path}/bin/python {install_dir}/echo_notes_dashboard.py
+Exec={venv_path}/bin/python {install_dir}/echo_notes/dashboard.py
 Icon={Path.home()}/.local/share/icons/echo-notes.png
 Terminal=false
 Categories=Utility;
@@ -119,8 +119,8 @@ def create_symlinks(install_dir, venv_path):
 
         # Create symlinks
         symlinks = {
-            "echo-notes-dashboard": install_dir / "echo_notes_dashboard.py",
-            "echo-notes-daemon": install_dir / "echo_notes_daemon.py",
+            "echo-notes-dashboard": install_dir / "echo_notes/dashboard.py",
+            "echo-notes-daemon": install_dir / "echo_notes/daemon.py",
             "echo-notes-python": venv_path / "bin" / "python",
         }
 
@@ -198,7 +198,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart={venv_path}/bin/python {install_dir}/echo_notes_daemon.py --daemon
+ExecStart={venv_path}/bin/python {install_dir}/echo_notes/daemon.py --daemon
 Restart=on-failure
 RestartSec=5s
 StandardOutput=journal
@@ -237,7 +237,7 @@ WantedBy=default.target
 Type=Application
 Name=Echo Notes Daemon
 Comment=Echo-Notes background service
-Exec={venv_path}/bin/python {install_dir}/echo_notes_daemon.py --daemon
+Exec={venv_path}/bin/python {install_dir}/echo_notes/daemon.py --daemon
 Terminal=false
 Hidden=false
 X-GNOME-Autostart-enabled=true
@@ -249,7 +249,7 @@ X-GNOME-Autostart-enabled=true
                 subprocess.Popen(
                     [
                         f"{venv_path}/bin/python",
-                        f"{install_dir}/echo_notes_daemon.py",
+                        f"{install_dir}/echo_notes/daemon.py",
                         "--daemon",
                     ],
                     stdout=subprocess.DEVNULL,
@@ -263,13 +263,13 @@ X-GNOME-Autostart-enabled=true
                 print_color(Colors.RED, f"Error starting daemon: {e2}")
                 print_color(Colors.YELLOW, "You can start the daemon manually using:")
                 print(
-                    f"{venv_path}/bin/python {install_dir}/echo_notes_daemon.py --daemon"
+                    f"{venv_path}/bin/python {install_dir}/echo_notes/daemon.py --daemon"
                 )
                 return False
     except Exception as e:
         print_color(Colors.RED, f"Error setting up daemon service: {e}")
         print_color(Colors.YELLOW, "You can start the daemon manually using:")
-        print(f"{venv_path}/bin/python {install_dir}/echo_notes_daemon.py --daemon")
+        print(f"{venv_path}/bin/python {install_dir}/echo_notes/daemon.py --daemon")
         return False
 
 
@@ -366,7 +366,7 @@ def install_linux(install_dir=None, options=None):
     print("1. The Echo-Notes daemon has been set up to start automatically at login")
     print("2. Launch the dashboard using the desktop shortcut or application menu")
     print("3. You can also run the dashboard directly with:")
-    print(f"   {venv_path}/bin/python {install_dir}/echo_notes_dashboard.py")
+    print(f"   {venv_path}/bin/python {install_dir}/echo_notes/dashboard.py")
     print("")
 
     return True

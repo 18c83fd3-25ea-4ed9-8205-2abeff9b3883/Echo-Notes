@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import re
 from pathlib import Path
 import os
-from shared import file_utils
+from echo_notes.shared import file_utils
 
 def extract_summary_timestamp(text: str) -> datetime:
     """Extract embedded timestamp from note content"""

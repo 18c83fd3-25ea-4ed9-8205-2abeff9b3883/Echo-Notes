@@ -1,7 +1,0 @@
-{
-  "processing_interval": 60,
-  "summary_interval": 10080,
-  "summary_day": 6,
-  "summary_hour": 12,
-  "daemon_enabled": true
-}

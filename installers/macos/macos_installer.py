@@ -83,7 +83,7 @@ def create_macos_app_bundle(install_dir, venv_path, app_name="Echo Notes Dashboa
         # Create the launcher script that points to the actual executable in the venv
         launcher_script = f"""#!/bin/bash
 # Launch Echo Notes Dashboard from the virtual environment
-"{venv_path}/bin/python" "{install_dir}/echo_notes_dashboard.py"
+"{venv_path}/bin/python" "{install_dir}/echo_notes/dashboard.py"
 """
 
         launcher_path = app_dir / "Contents" / "MacOS" / "echo-notes-launcher"
@@ -138,8 +138,8 @@ def create_symlinks(venv_path, install_dir):
                     f"""#!/bin/bash
 # Create symlinks for Echo-Notes executables
 ln -sf "{venv_path}/bin/python" "{bin_dir}/echo-notes-python"
-ln -sf "{install_dir}/echo_notes_dashboard.py" "{bin_dir}/echo-notes-dashboard"
-ln -sf "{install_dir}/echo_notes_daemon.py" "{bin_dir}/echo-notes-daemon"
+ln -sf "{install_dir}/echo_notes/dashboard.py" "{bin_dir}/echo-notes-dashboard"
+ln -sf "{install_dir}/echo_notes/daemon.py" "{bin_dir}/echo-notes-daemon"
 echo "Symlinks created in {bin_dir}"
 """
                 )
@@ -164,9 +164,9 @@ echo "Symlinks created in {bin_dir}"
         # If /usr/local/bin is writable, create symlinks directly
         os.symlink(venv_path / "bin" / "python", bin_dir / "echo-notes-python")
         os.symlink(
-            install_dir / "echo_notes_dashboard.py", bin_dir / "echo-notes-dashboard"
+            install_dir / "echo_notes/dashboard.py", bin_dir / "echo-notes-dashboard"
         )
-        os.symlink(install_dir / "echo_notes_daemon.py", bin_dir / "echo-notes-daemon")
+        os.symlink(install_dir / "echo_notes/daemon.py", bin_dir / "echo-notes-daemon")
 
         print_color(Colors.GREEN, "Symlinks created in /usr/local/bin")
         return True
@@ -201,7 +201,7 @@ def setup_launchd_service(install_dir, venv_path):
     <key>ProgramArguments</key>
     <array>
         <string>{venv_path}/bin/python</string>
-        <string>{install_dir}/echo_notes_daemon.py</string>
+        <string>{install_dir}/echo_notes/daemon.py</string>
         <string>--daemon</string>
     </array>
     <key>RunAtLoad</key>
@@ -233,7 +233,7 @@ def setup_launchd_service(install_dir, venv_path):
     except Exception as e:
         print_color(Colors.RED, f"Error setting up launchd service: {e}")
         print_color(Colors.YELLOW, "You can still start the daemon manually using:")
-        print(f'"{venv_path}/bin/python" "{install_dir}/echo_notes_daemon.py" --daemon')
+        print(f'"{venv_path}/bin/python" "{install_dir}/echo_notes/daemon.py" --daemon')
         return False
 
 
@@ -306,7 +306,7 @@ def install_macos(install_dir=None, options=None):
     print("1. The Echo-Notes daemon has been set up to start automatically at login")
     print("2. Launch the dashboard using the application in your Applications folder")
     print("3. You can also run the dashboard directly with:")
-    print(f'   "{venv_path}/bin/python" "{install_dir}/echo_notes_dashboard.py"')
+    print(f'   "{venv_path}/bin/python" "{install_dir}/echo_notes/dashboard.py"')
     print("")
 
     return True

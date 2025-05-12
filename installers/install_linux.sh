@@ -85,7 +85,7 @@ done
 export PYTHONPATH="$PARENT_DIR:$PYTHONPATH"
 
 # Check if we're running from the repository or need to download it
-if [ -f "$SCRIPT_DIR/../echo_notes_dashboard.py" ]; then
+if [ -f "$SCRIPT_DIR/../echo_notes/dashboard.py" ]; then
     echo -e "${GREEN}Running from Echo-Notes repository${NC}"
     REPO_DIR="$SCRIPT_DIR/.."
 else
