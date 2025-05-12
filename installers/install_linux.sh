@@ -10,6 +10,10 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}===== Echo-Notes Linux Installer =====${NC}"
 echo ""
+echo -e "${YELLOW}Debug: Starting installer script${NC}"
+echo -e "${YELLOW}Debug: Script path: $0${NC}"
+echo -e "${YELLOW}Debug: Current directory: $(pwd)${NC}"
+echo -e "${YELLOW}Debug: User home: $HOME${NC}"
 
 # Determine script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -706,6 +710,9 @@ if [ $INSTALL_RESULT -eq 0 ]; then
     
     # Copy the uninstaller scripts to the user's home directory
     echo -e "${BLUE}Installing uninstaller scripts...${NC}"
+    echo -e "${YELLOW}Debug: REPO_DIR=$REPO_DIR${NC}"
+    echo -e "${YELLOW}Debug: SCRIPT_DIR=$SCRIPT_DIR${NC}"
+    echo -e "${YELLOW}Debug: HOME=$HOME${NC}"
     
     # Look for uninstaller scripts in various locations
     SHELL_SCRIPT_FOUND=false
@@ -1096,6 +1103,11 @@ EOF
         echo -e "${YELLOW}Warning: No uninstaller scripts found. To uninstall manually, use:${NC}"
         echo -e "${YELLOW}python3 $INSTALL_DIR/installers/linux/linux_uninstaller.py $INSTALL_DIR${NC}"
     fi
+    
+    echo -e "${YELLOW}Debug: Finished creating uninstaller scripts${NC}"
+    echo -e "${YELLOW}Debug: Checking if uninstaller scripts exist:${NC}"
+    echo -e "${YELLOW}Debug: uninstall.sh exists: $([ -f "$HOME/uninstall.sh" ] && echo "Yes" || echo "No")${NC}"
+    echo -e "${YELLOW}Debug: uninstall.py exists: $([ -f "$HOME/uninstall.py" ] && echo "Yes" || echo "No")${NC}"
     
     # Remind about PATH if symlinks were created
     if [ "$NO_SYMLINKS" = false ]; then
