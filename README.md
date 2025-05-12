@@ -146,7 +146,7 @@ This is useful for verifying that the installation will work correctly on your s
 
 ## Uninstallation
 
-See [UNINSTALL.md](UNINSTALL.md) for detailed uninstallation instructions.
+See [UNINSTALL.md](Docs/Uninstall.md) for detailed uninstallation instructions. 
 
 ---
 
