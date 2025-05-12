@@ -127,3 +127,14 @@ chmod +x install_linux.sh
 ## Future Development
 
 In future phases, additional platform-specific standalone installers will be enhanced with more features and improved user experience.
+
+## Icon Files
+
+The Echo-Notes application uses icon files for desktop shortcuts and application menu entries. The icon file is expected to be located in one of the following locations:
+
+1. `config/icons/Echo-Notes-Icon.png` (preferred location)
+2. `Echo-Notes-Icon.png` (root directory)
+3. `echo_notes/icons/Echo-Notes-Icon.png`
+4. `echo_notes/Echo-Notes-Icon.png`
+
+The installers will search for the icon file in these locations in the order listed above. If the icon file is not found, the desktop shortcuts will use the default system icon.
