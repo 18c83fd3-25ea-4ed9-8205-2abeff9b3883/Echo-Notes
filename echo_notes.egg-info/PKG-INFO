@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: echo_notes
+Version: 0.5.1
+Requires-Python: >=3.7
+License-File: LICENSE
+Requires-Dist: requests>=2.25.1
+Requires-Dist: python-dateutil>=2.8.2
+Requires-Dist: PyQt6>=6.4.0
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
