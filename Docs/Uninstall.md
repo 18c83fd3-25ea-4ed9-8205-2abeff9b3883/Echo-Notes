@@ -8,84 +8,74 @@ Echo-Notes supports multiple uninstallation methods depending on how you install
 
 ## 1. One-Click Installer or Unified Installer
 
-If you used `install_echo_notes.py` or `echo_notes_installer.py`, an uninstaller script was automatically created.
+If you used the installer script, uninstaller scripts were automatically created in your home directory.
 
 ### Run the uninstaller:
 
 #### On Linux/macOS:
 ```bash
 ./uninstall.sh
+```
 
-On Windows:
+Or use the Python uninstaller:
+```bash
+python3 uninstall.py
+```
 
+#### On Windows:
+```
 uninstall.bat
+```
 
 The uninstaller will:
-
-Stop Echo-Notes processes
-
-Remove desktop shortcuts and icons
-
-Ask whether to keep your notes (default: yes)
-
-
+- Stop Echo-Notes processes
+- Remove desktop shortcuts and icons
+- Remove systemd service or startup entries
+- Ask whether to keep your notes (default: yes)
+- Ask whether to remove the installation directory
 
 ---
 
-2. Python-Based Uninstallation (All Platforms)
+## 2. Python-Based Uninstallation (All Platforms)
 
 You can also run the platform-independent Python script:
 
+```bash
 python uninstall.py
+```
 
 Options:
-
---help: Show help message
-
---keep-config: Keep config files and prompts
-
---purge: Remove everything including your notes (USE WITH CAUTION)
-
-
+- `--help`: Show help message
+- `--install-dir DIR`: Specify installation directory
+- `--purge`: Remove everything including your notes (USE WITH CAUTION)
 
 ---
 
-3. Dry Run (Test Mode)
-
-To preview what would be removed without deleting anything:
-
-python test_uninstall.py
-
-
----
-
-4. Manual Cleanup
+## 3. Manual Cleanup
 
 If needed, remove the following manually:
 
-Virtual environment folder (e.g. venv/)
-
-Desktop shortcut files
-
-Installed Echo-Notes files in your preferred directory
-
-Any symbolic links in /usr/local/bin or similar
-
-
+- Virtual environment folder (e.g., `echo_notes_venv/`)
+- Desktop shortcut files
+- Installed Echo-Notes files in your preferred directory
+- Any symbolic links in `~/.local/bin` or similar
+- Systemd service files in `~/.config/systemd/user/`
+- Autostart entries in `~/.config/autostart/`
 
 ---
 
-Resetting Notes or Configuration
+## Resetting Notes or Configuration
 
 If you want to reset just the configuration without uninstalling:
 
+```bash
 rm -rf ~/.config/echo-notes/
+```
 
-Or delete shared/prompts_config.json and shared/schedule_config.json to restore prompt/schedule defaults.
-
+Or delete `shared/schedule_config.json` to restore schedule defaults.
 
 ---
 
-For reinstall instructions, see manual_install.md.
+For reinstall instructions, see [manual_install.md](manual_install.md).
 
 ---

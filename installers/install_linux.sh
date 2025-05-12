@@ -688,6 +688,37 @@ rm "$TEMP_SCRIPT"
 if [ $INSTALL_RESULT -eq 0 ]; then
     echo -e "${GREEN}Installation completed successfully!${NC}"
     
+    # Copy the uninstaller scripts to the user's home directory
+    echo -e "${BLUE}Installing uninstaller scripts...${NC}"
+    
+    # Copy shell script
+    if [ -f "$SCRIPT_DIR/../uninstall.sh" ]; then
+        cp "$SCRIPT_DIR/../uninstall.sh" "$HOME/uninstall.sh"
+        chmod +x "$HOME/uninstall.sh"
+        echo -e "${GREEN}Shell uninstaller script installed to: $HOME/uninstall.sh${NC}"
+    else
+        echo -e "${YELLOW}Warning: Shell uninstaller script not found.${NC}"
+    fi
+    
+    # Copy Python script
+    if [ -f "$SCRIPT_DIR/../uninstall.py" ]; then
+        cp "$SCRIPT_DIR/../uninstall.py" "$HOME/uninstall.py"
+        chmod +x "$HOME/uninstall.py"
+        echo -e "${GREEN}Python uninstaller script installed to: $HOME/uninstall.py${NC}"
+    else
+        echo -e "${YELLOW}Warning: Python uninstaller script not found.${NC}"
+    fi
+    
+    # Provide uninstallation instructions
+    if [ -f "$HOME/uninstall.sh" ] || [ -f "$HOME/uninstall.py" ]; then
+        echo -e "${YELLOW}To uninstall Echo-Notes, you can run either:${NC}"
+        [ -f "$HOME/uninstall.sh" ] && echo -e "${YELLOW}  - ./uninstall.sh${NC}"
+        [ -f "$HOME/uninstall.py" ] && echo -e "${YELLOW}  - python3 uninstall.py${NC}"
+    else
+        echo -e "${YELLOW}Warning: No uninstaller scripts found. To uninstall manually, use:${NC}"
+        echo -e "${YELLOW}python3 $INSTALL_DIR/installers/linux/linux_uninstaller.py $INSTALL_DIR${NC}"
+    fi
+    
     # Remind about PATH if symlinks were created
     if [ "$NO_SYMLINKS" = false ]; then
         echo -e "${YELLOW}Note: If this is your first time installing Echo-Notes, you may need to restart your terminal"
