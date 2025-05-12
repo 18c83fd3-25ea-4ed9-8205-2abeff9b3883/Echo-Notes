@@ -8,7 +8,7 @@ Echo-Notes supports multiple uninstallation methods depending on how you install
 
 ## 1. One-Click Installer or Unified Installer
 
-If you used the installer script, uninstaller scripts were automatically created in your home directory.
+If you used the installer script or the wrapper script, uninstaller scripts should be available in your home directory.
 
 ### Run the uninstaller:
 
@@ -21,6 +21,14 @@ Or use the Python uninstaller:
 ```bash
 python3 uninstall.py
 ```
+
+> **Note:** If you don't see the uninstaller scripts in your home directory after using the standard installer, try using our wrapper script instead:
+> ```bash
+> curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/install_echo_notes.sh
+> chmod +x install_echo_notes.sh
+> ./install_echo_notes.sh
+> ```
+> This wrapper script ensures that uninstaller scripts are properly created in your home directory.
 
 #### On Windows:
 ```
