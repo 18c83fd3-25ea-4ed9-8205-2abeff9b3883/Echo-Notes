@@ -41,11 +41,23 @@ def create_desktop_shortcuts(install_dir, venv_path):
         icons_dir = Path.home() / ".local/share/icons"
         os.makedirs(icons_dir, exist_ok=True)
 
-        icon_path = install_dir / "Echo-Notes-Icon.png"
-        if icon_path.exists():
-            shutil.copy(icon_path, icons_dir / "echo-notes.png")
-            print_color(Colors.GREEN, f"Installed icon to {icons_dir}/echo-notes.png")
-        else:
+        # Check multiple possible icon locations
+        icon_paths = [
+            install_dir / "config/icons/Echo-Notes-Icon.png",  # New location
+            install_dir / "Echo-Notes-Icon.png",               # Old location
+            install_dir / "echo_notes/icons/Echo-Notes-Icon.png",  # Alternative location
+            install_dir / "echo_notes/Echo-Notes-Icon.png"     # Another possible location
+        ]
+        
+        icon_found = False
+        for icon_path in icon_paths:
+            if icon_path.exists():
+                shutil.copy(icon_path, icons_dir / "echo-notes.png")
+                print_color(Colors.GREEN, f"Installed icon from {icon_path} to {icons_dir}/echo-notes.png")
+                icon_found = True
+                break
+                
+        if not icon_found:
             print_color(
                 Colors.YELLOW, "Icon file not found, shortcuts will use default icon"
             )
