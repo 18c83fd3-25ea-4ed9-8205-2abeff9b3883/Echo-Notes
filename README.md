@@ -1,4 +1,3 @@
-
 # Echo-Notes
 
 ### Sync, Process, and Summarize Notes, Files, Emails Privately and automatically with local AI
@@ -52,38 +51,101 @@ For users who want:
 
 ## Installation
 
-Option 1: One-Click Installer (Recommended)
-```bash
-curl -O https://raw.githubusercontent.com/.../install_echo_notes.py
-chmod +x install_echo_notes.py
-./install_echo_notes.py
-```
-Installs the app, configures environment, sets up daemon and shortcuts.
+> **Note:** Echo-Notes has recently migrated to a new modular installer framework. The instructions below use the new installers. For information about migrating from the old installers, see [MIGRATION.md](MIGRATION.md).
 
-Option 2: Manual Installation
+### Windows
+
 ```bash
-git clone https://github.com/.../Echo-Notes
-cd Echo-Notes
-python echo_notes_installer.py
+# Download the installer
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/installers/install_windows.py
+
+# Run the installer
+python install_windows.py
 ```
-Sets up environment, dependencies, and optional daemon.
+
+Or download and run the installer executable from our releases page.
+
+The Windows installer provides a graphical interface with options to:
+- Choose installation directory
+- Create desktop shortcuts
+- Set up the Echo-Notes daemon service
+
+Command-line options are also available:
+```bash
+python install_windows.py install --install-dir "C:\Echo-Notes" --no-shortcut --no-service
+```
+
+### macOS
+
+```bash
+# Download the installer
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/installers/install_macos.sh
+
+# Make it executable
+chmod +x install_macos.sh
+
+# Run the installer
+./install_macos.sh
+```
+
+The macOS installer will:
+- Create an application bundle (.app)
+- Set up symlinks in /usr/local/bin
+- Configure a LaunchAgent service
+
+Command-line options:
+```bash
+./install_macos.sh --install-dir ~/Applications/Echo-Notes --no-app-bundle --no-symlinks --no-service
+```
+
+### Linux
+
+```bash
+# Download the installer
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/installers/install_linux.sh
+
+# Make it executable
+chmod +x install_linux.sh
+
+# Run the installer
+./install_linux.sh
+```
+
+The Linux installer will:
+- Create desktop shortcuts and application menu entries
+- Set up symlinks in ~/.local/bin
+- Configure a systemd service (with autostart fallback)
+- Update PATH environment variable
+
+Command-line options:
+```bash
+./install_linux.sh --install-dir ~/echo-notes --no-shortcuts --no-symlinks --no-service
+```
 
 For advanced manual setup, see docs/manual_install.md.
 
+### Testing the Installation
+
+You can test the installation process without making any changes to your system using the test framework:
+
+```bash
+# Test installation on your platform
+python installers/test_framework.py --mode install
+
+# Test uninstallation on your platform
+python installers/test_framework.py --mode uninstall
+
+# Test on a specific platform
+python installers/test_framework.py --mode install --platform windows|macos|linux
+```
+
+This is useful for verifying that the installation will work correctly on your system before actually performing it.
 
 ---
 
 ## Uninstallation
 
-Run the generated uninstaller:
-
-Windows: uninstall.bat
-
-macOS/Linux: ./uninstall.sh
-
-
-For full options and manual steps, see docs/uninstall.md.
-
+See [UNINSTALL.md](UNINSTALL.md) for detailed uninstallation instructions.
 
 ---
 
@@ -100,7 +162,6 @@ GUI Dashboard: Monitor, trigger, configure
 Local LLM processing via LM Studio
 
 Daemon support for background operation
-
 
 
 ---
