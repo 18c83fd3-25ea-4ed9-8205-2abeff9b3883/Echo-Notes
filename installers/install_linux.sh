@@ -84,6 +84,11 @@ done
 # Add the parent directory to PYTHONPATH
 export PYTHONPATH="$PARENT_DIR:$PYTHONPATH"
 
+# Set default installation directory if not provided
+if [ -z "$INSTALL_DIR" ]; then
+    INSTALL_DIR="$HOME/Echo-Notes"
+fi
+
 # Check if we're running from the repository or need to download it
 if [ -f "$SCRIPT_DIR/../echo_notes/dashboard.py" ]; then
     echo -e "${GREEN}Running from Echo-Notes repository${NC}"
@@ -199,7 +204,9 @@ def download_echo_notes(install_dir=None):
         return None
 
 # Download Echo-Notes
-install_dir = "${INSTALL_DIR}" if "${INSTALL_DIR}" else None
+# Get the installation directory from environment variable or use None
+import os
+install_dir = os.environ.get("INSTALL_DIR")
 download_dir = download_echo_notes(install_dir)
 
 if download_dir:
@@ -208,7 +215,8 @@ else:
     print("DOWNLOAD_FAILED")
 EOF
 
-    # Run the download script
+    # Run the download script with INSTALL_DIR environment variable
+    export INSTALL_DIR
     DOWNLOAD_RESULT=$("$PYTHON_CMD" "$TEMP_SCRIPT")
     rm "$TEMP_SCRIPT"
     
@@ -230,10 +238,18 @@ EOF
     fi
 fi
 
-# Set installation directory if not provided
-if [ -z "$INSTALL_DIR" ]; then
+# If we're running from the repository and no installation directory was specified,
+# use the repository directory as the installation directory
+if [ -z "$INSTALL_DIR" ] && [ "$REPO_DIR" != "" ]; then
     INSTALL_DIR="$REPO_DIR"
 fi
+
+# Make sure INSTALL_DIR is set
+if [ -z "$INSTALL_DIR" ]; then
+    INSTALL_DIR="$HOME/Echo-Notes"
+fi
+
+echo -e "${BLUE}Installing Echo-Notes to: ${INSTALL_DIR}${NC}"
 
 # Check for required dependencies
 echo -e "${BLUE}Checking for required dependencies...${NC}"
