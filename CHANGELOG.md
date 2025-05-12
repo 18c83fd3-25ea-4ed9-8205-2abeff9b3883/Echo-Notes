@@ -8,6 +8,8 @@
 - Fixed a bug in the Linux installer script where shell boolean values weren't properly converted to Python boolean values
 - Fixed desktop icon issue in Linux installer by searching for the icon file in multiple locations
 - Fixed uninstaller functionality by creating standalone uninstaller scripts that are copied to the user's home directory
+- Fixed installation directory variable handling in Linux installer to properly set and pass the installation directory
+- Fixed environment variable handling in the Python download script to correctly use the installation directory
 - Updated uninstallation documentation with correct formatting and instructions
 
 ### Added
