@@ -10,10 +10,10 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}===== Echo-Notes Linux Installer =====${NC}"
 echo ""
-echo -e "${YELLOW}Debug: Starting installer script${NC}"
-echo -e "${YELLOW}Debug: Script path: $0${NC}"
-echo -e "${YELLOW}Debug: Current directory: $(pwd)${NC}"
-echo -e "${YELLOW}Debug: User home: $HOME${NC}"
+echo -e "${YELLOW}Starting installer script${NC}"
+echo -e "${YELLOW}Script path: $0${NC}"
+echo -e "${YELLOW}Current directory: $(pwd)${NC}"
+echo -e "${YELLOW}User home: $HOME${NC}"
 
 # Determine script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
