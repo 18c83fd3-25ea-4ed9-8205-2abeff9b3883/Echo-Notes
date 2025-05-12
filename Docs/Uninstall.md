@@ -2,7 +2,7 @@
 
 # Uninstalling Echo-Notes
 
-Echo-Notes supports multiple uninstallation methods depending on how you installed it.
+Echo-Notes supports multiple uninstallation methods depending on how you installed it..
 
 ---
 
