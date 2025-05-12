@@ -10,7 +10,6 @@
 
 ---
 
-[![Lint Status](https://github.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/actions/workflows/lint.yml/badge.svg)](https://github.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Built With Python](https://img.shields.io/badge/Built%20with-Python-blue)](https://www.python.org/)
 [![Local-First](https://img.shields.io/badge/Privacy-Local%20Only-green)](#)
