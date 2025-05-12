@@ -10,6 +10,8 @@
 - Fixed uninstaller functionality by creating standalone uninstaller scripts that are copied to the user's home directory
 - Fixed installation directory variable handling in Linux installer to properly set and pass the installation directory
 - Fixed environment variable handling in the Python download script to correctly use the installation directory
+- Enhanced the installer to create uninstaller scripts on-the-fly if they're not found in the repository
+- Improved uninstaller script search to look in multiple locations
 - Updated uninstallation documentation with correct formatting and instructions
 
 ### Added
