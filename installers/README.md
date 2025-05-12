@@ -93,6 +93,37 @@ if __name__ == "__main__":
     main()
 ```
 
+## Standalone Installers
+
+The framework also provides standalone installer scripts that can be downloaded and run without cloning the entire repository:
+
+- `install_linux.sh`: Standalone Linux installer
+- `install_macos.sh`: Standalone macOS installer
+- `install_windows.py`: Standalone Windows installer
+
+These standalone installers include all necessary code to download and install Echo-Notes without requiring any external dependencies beyond Python and standard libraries.
+
+### Linux Standalone Installer
+
+The Linux standalone installer (`install_linux.sh`) is a self-contained Bash script that:
+
+1. Checks for Python 3 and required dependencies
+2. Downloads the Echo-Notes repository
+3. Creates a virtual environment
+4. Installs dependencies
+5. Configures the application
+6. Creates desktop shortcuts and application menu entries
+7. Sets up symlinks in ~/.local/bin
+8. Configures a systemd service (with autostart fallback)
+
+It can be downloaded and run with:
+
+```bash
+curl -O https://raw.githubusercontent.com/18c83fd3-25ea-4ed9-8205-2abeff9b3883/Echo-Notes/main/installers/install_linux.sh
+chmod +x install_linux.sh
+./install_linux.sh
+```
+
 ## Future Development
 
-In future phases, platform-specific installers will be implemented in their respective directories.
+In future phases, additional platform-specific standalone installers will be enhanced with more features and improved user experience.
