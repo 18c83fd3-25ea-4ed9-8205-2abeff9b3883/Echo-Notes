@@ -1,4 +1,4 @@
-git #!/bin/bash
+#!/bin/bash
 # Echo-Notes Installer Wrapper Script
 
 # Color codes for output
