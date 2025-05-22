@@ -310,10 +310,34 @@ class EchoNotesDashboard(QMainWindow):
             logger.info("Starting Echo-Notes daemon...")
             
             # Define script_path first to avoid reference before assignment
-            script_path = Path(__file__).parent / "echo_notes_daemon.py"
+            # Use the correct path to the daemon.py script
+            old_script_path = Path(__file__).parent / "echo_notes_daemon.py"
+            script_path = Path(__file__).parent / "daemon.py"  # This is the correct path
+            logger.debug(f"Old daemon path (doesn't exist): {old_script_path}")
+            logger.debug(f"New daemon path (should exist): {script_path}")
+            logger.debug(f"Current file location: {Path(__file__)}")
+            logger.debug(f"Parent directory: {Path(__file__).parent}")
             logger.debug(f"Attempting to start daemon with command: {sys.executable} {script_path} --daemon")
 
+            # Check if the script exists
+            if not script_path.exists():
+                logger.error(f"Daemon script not found at {script_path}")
+                # Try to find the daemon script
+                possible_paths = [
+                    Path(__file__).parent.parent / "daemon.py",
+                    Path.cwd() / "daemon.py",
+                    Path.cwd() / "echo_notes" / "daemon.py",
+                    Path(__file__).parent.parent / "echo_notes" / "daemon.py"
+                ]
+                for path in possible_paths:
+                    logger.debug(f"Checking alternative path: {path}")
+                    if path.exists():
+                        logger.info(f"Found daemon script at {path}")
+                        script_path = path
+                        break
+            
             # Use subprocess to run the daemon script
+            logger.debug(f"Final daemon path: {script_path}")
             subprocess.Popen([sys.executable, str(script_path), "--daemon"])
             logger.debug("subprocess.Popen called for daemon start")
 
@@ -331,7 +355,32 @@ class EchoNotesDashboard(QMainWindow):
             logger.debug("Attempting to stop daemon")
 
             # Use subprocess to run the daemon script with stop flag
-            script_path = Path(__file__).parent / "echo_notes_daemon.py"
+            # Use the correct path to the daemon.py script
+            old_script_path = Path(__file__).parent / "echo_notes_daemon.py"
+            script_path = Path(__file__).parent / "daemon.py"  # This is the correct path
+            logger.debug(f"Old daemon path (doesn't exist): {old_script_path}")
+            logger.debug(f"New daemon path (should exist): {script_path}")
+            logger.debug(f"Current file location: {Path(__file__)}")
+            logger.debug(f"Parent directory: {Path(__file__).parent}")
+            
+            # Check if the script exists
+            if not script_path.exists():
+                logger.error(f"Daemon script not found at {script_path}")
+                # Try to find the daemon script
+                possible_paths = [
+                    Path(__file__).parent.parent / "daemon.py",
+                    Path.cwd() / "daemon.py",
+                    Path.cwd() / "echo_notes" / "daemon.py",
+                    Path(__file__).parent.parent / "echo_notes" / "daemon.py"
+                ]
+                for path in possible_paths:
+                    logger.debug(f"Checking alternative path: {path}")
+                    if path.exists():
+                        logger.info(f"Found daemon script at {path}")
+                        script_path = path
+                        break
+            
+            logger.debug(f"Final daemon path: {script_path}")
             result = subprocess.run([sys.executable, str(script_path), "--stop"], capture_output=True, text=True)
             logger.debug(f"Stop daemon command result: {result.returncode}")
             logger.debug(f"Stop daemon stdout: {result.stdout}")
