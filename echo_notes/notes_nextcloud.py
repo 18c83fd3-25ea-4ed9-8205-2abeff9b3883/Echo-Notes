@@ -3,12 +3,24 @@
 from pathlib import Path
 import os
 import json
-from shared import (
-    config,
-    file_utils,
-    date_helpers,
-    llm_client
-)
+try:
+    # Try the correct import path first
+    from echo_notes.shared import (
+        config,
+        file_utils,
+        date_helpers,
+        llm_client
+    )
+    print("Successfully imported from echo_notes.shared")
+except ImportError:
+    # Fall back to the old import path
+    from shared import (
+        config,
+        file_utils,
+        date_helpers,
+        llm_client
+    )
+    print("Falling back to import from shared")
 
 def load_prompts_from_config():
     with open(config.PROMPTS_CONFIG_PATH, 'r') as f:
@@ -26,8 +38,15 @@ def process_note(file_path: Path):
     file_utils.write_processed_note(file_path, processed)
 
 def main():
+    print(f"NOTES_NEXTCLOUD: Processing notes from directory: {config.NOTES_DIR}")
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger('notes_nextcloud')
+    logger.debug(f"Processing notes from directory: {config.NOTES_DIR}")
+    
     for fname in os.listdir(config.NOTES_DIR):
         file_path = config.NOTES_DIR / fname
+        logger.debug(f"Checking file: {file_path}")
         if file_path.suffix == '.md':
             process_note(file_path)
 
