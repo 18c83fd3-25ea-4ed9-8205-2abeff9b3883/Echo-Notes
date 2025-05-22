@@ -18,7 +18,7 @@
 
 ### Project Status
 
-- MVP Stable – Actively maintained
+- Unstable – Actively maintained, Continous Improvement, Use at your own risk
 - Focus: Local-only automation, modular design
 
 ---
