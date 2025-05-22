@@ -425,8 +425,18 @@ class EchoNotesDashboard(QMainWindow):
                 logger.debug(f"LLM server response status: {response.status_code}")
                 
                 # LLM server is available, proceed with processing
-                from ai_notes_nextcloud import main as process_notes_main
-                logger.debug("LLM server available, proceeding with note processing")
+                try:
+                    from echo_notes.notes_nextcloud import main as process_notes_main
+                    logger.debug("Successfully imported from echo_notes.notes_nextcloud")
+                except ImportError:
+                    try:
+                        from ai_notes_nextcloud import main as process_notes_main
+                        logger.debug("Successfully imported from ai_notes_nextcloud")
+                    except ImportError:
+                        from notes_nextcloud import main as process_notes_main
+                        logger.debug("Successfully imported from notes_nextcloud")
+                
+                logger.debug(f"LLM server available, proceeding with note processing. Using NOTES_DIR: {config.NOTES_DIR}")
                 process_notes_main()
                 logger.info("Note processing completed successfully")
 
@@ -493,8 +503,18 @@ class EchoNotesDashboard(QMainWindow):
                 logger.debug(f"LLM server response status: {response.status_code}")
                 
                 # LLM server is available, proceed with summary generation
-                from ai_weekly_summary import main as generate_summary_main
-                logger.debug("LLM server available, proceeding with summary generation")
+                try:
+                    from echo_notes.weekly_summary import main as generate_summary_main
+                    logger.debug("Successfully imported from echo_notes.weekly_summary")
+                except ImportError:
+                    try:
+                        from ai_weekly_summary import main as generate_summary_main
+                        logger.debug("Successfully imported from ai_weekly_summary")
+                    except ImportError:
+                        from weekly_summary import main as generate_summary_main
+                        logger.debug("Successfully imported from weekly_summary")
+                
+                logger.debug(f"LLM server available, proceeding with summary generation. Using NOTES_DIR: {config.NOTES_DIR}")
                 generate_summary_main()
                 logger.info("Summary generation completed successfully")
 
@@ -567,6 +587,22 @@ class EchoNotesDashboard(QMainWindow):
                 config.SCHEDULE_CONFIG["notes_directory"] = str(new_dir_path)
                 config.save_schedule_config(config.SCHEDULE_CONFIG)
                 logger.info(f"Saved notes directory to configuration file: {new_dir_path}")
+                
+                # If daemon is running, ask user if they want to restart it
+                if self.daemon_running:
+                    restart = QMessageBox.question(
+                        self,
+                        "Restart Daemon?",
+                        "The notes directory has been updated. Do you want to restart the daemon to apply this change?",
+                        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                        QMessageBox.StandardButton.Yes
+                    )
+                    
+                    if restart == QMessageBox.StandardButton.Yes:
+                        logger.info("Restarting daemon to apply new notes directory...")
+                        self.stop_daemon()
+                        # Wait a moment for the daemon to fully stop
+                        QTimer.singleShot(2000, self.start_daemon)
                 
                 # Show confirmation message
                 QMessageBox.information(

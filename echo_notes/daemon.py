@@ -11,8 +11,20 @@ import subprocess
 import atexit
 from pathlib import Path
 
-from echo_notes.shared import config
-from echo_notes.shared.config import SCHEDULE_CONFIG
+import sys
+import os
+from pathlib import Path
+
+# Add the parent directory to sys.path to allow imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+try:
+    from echo_notes.shared import config
+    from echo_notes.shared.config import SCHEDULE_CONFIG
+except ImportError:
+    # Try relative import
+    from shared import config
+    from shared.config import SCHEDULE_CONFIG
 
 # Set up logging
 logging.basicConfig(
@@ -85,20 +97,52 @@ def should_generate_summary(last_run):
 def run_process_notes():
     """Run the note processing script"""
     logger.info("Running note processing...")
+    logger.debug(f"Current NOTES_DIR: {config.NOTES_DIR}")
     try:
-        from ai_notes_nextcloud import main as process_notes_main
+        # Try the correct import path first
+        try:
+            from echo_notes.notes_nextcloud import main as process_notes_main
+            logger.debug("Successfully imported from echo_notes.notes_nextcloud")
+        except ImportError:
+            # Fall back to the old import path
+            try:
+                from ai_notes_nextcloud import main as process_notes_main
+                logger.debug("Successfully imported from ai_notes_nextcloud")
+            except ImportError:
+                # Try relative import
+                from .notes_nextcloud import main as process_notes_main
+                logger.debug("Successfully imported from .notes_nextcloud")
+        
         process_notes_main()
         logger.info("Note processing completed successfully")
         return datetime.datetime.now()
     except Exception as e:
         logger.error(f"Error processing notes: {e}")
+        logger.error(f"Import error details: {str(e)}")
+        import traceback
+        logger.error(traceback.format_exc())
         return None
 
 def run_generate_summary():
     """Run the summary generation script"""
     logger.info("Running summary generation...")
+    logger.debug(f"Current NOTES_DIR for summary: {config.NOTES_DIR}")
     try:
-        from ai_weekly_summary import main as generate_summary_main
+        # Try the correct import path first
+        try:
+            from echo_notes.weekly_summary import main as generate_summary_main
+            logger.debug("Successfully imported from echo_notes.weekly_summary")
+        except ImportError as ie:
+            logger.debug(f"Import error from echo_notes.weekly_summary: {ie}")
+            # Fall back to the old import path
+            try:
+                from ai_weekly_summary import main as generate_summary_main
+                logger.debug("Successfully imported from ai_weekly_summary")
+            except ImportError:
+                # Try relative import
+                from .weekly_summary import main as generate_summary_main
+                logger.debug("Successfully imported from .weekly_summary")
+        
         generate_summary_main()
         logger.info("Summary generation completed successfully")
         return datetime.datetime.now()
@@ -116,7 +160,18 @@ def daemon_loop():
     
     while running:
         # Reload config in case it was changed
+        old_notes_dir = config.NOTES_DIR
         config.SCHEDULE_CONFIG = config.load_schedule_config()
+        
+        # Check if notes directory has changed
+        if "notes_directory" in config.SCHEDULE_CONFIG:
+            notes_dir_from_config = Path(config.SCHEDULE_CONFIG["notes_directory"])
+            if notes_dir_from_config != config.NOTES_DIR:
+                logger.info(f"Notes directory changed from {config.NOTES_DIR} to {notes_dir_from_config}")
+                config.NOTES_DIR = notes_dir_from_config
+                os.environ['ECHO_NOTES_DIR'] = str(notes_dir_from_config)
+        
+        logger.debug(f"Current NOTES_DIR in daemon loop: {config.NOTES_DIR}")
         
         # Check if daemon is enabled
         if not config.SCHEDULE_CONFIG.get('daemon_enabled', True):
