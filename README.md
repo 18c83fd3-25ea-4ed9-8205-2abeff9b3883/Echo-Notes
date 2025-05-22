@@ -4,7 +4,7 @@
 
 **A privacy-first voice-to-text, file, and note cleanup pipeline powered by local LLMs.**  
 - Type or capture voice-to-text notes on your phone or laptop.
-- Sync them to your home computer via Nextcloud, Syncthing, or your method of choice.
+- Sync them to your home computer via Nextcloud, Syncthing, Rclone, or your method of choice.
 - Or Drop emails, files, or articles into the folder.
 - Then automatically clean, structure, summarize, or create To Do's with them using a local language model..
 
@@ -20,8 +20,6 @@
 
 - MVP Stable – Actively maintained
 - Focus: Local-only automation, modular design
-- Recent: GUI Dashboard, Auto Summaries
-- Upcoming: Mood tracking, better sync detection
 
 ---
 
@@ -30,20 +28,19 @@
 For users who want:
 - 100% local, private AI-based note and file processing
 - Clean, modular architecture
-- Zero reliance on cloud services
 
 ---
 
 ## How It Works
 
 ```text
-[Voice or Text Input]  → [Daily & Weekly Processing]
+[Voice or Text Input]  
        ↓
     [Sync]
        ↓
   [Local LLM] 
        ↓
-[Clean Markdown Output]
+[Daily & Weekly Processing]
 ```
 
 ---
@@ -53,6 +50,8 @@ For users who want:
 > **Note:** Echo-Notes has recently migrated to a new modular installer framework. The instructions below use the new installers. For information about migrating from the old installers, see [MIGRATION.md](MIGRATION.md).
 >
 > **Having trouble?** See our [Quick Installation Guide](Docs/quick_install_guide.md) for simplified instructions and troubleshooting tips.
+>
+> **Note:** The windows and mac installers have not been fully tested but "should" work. 
 
 ### Windows
 
@@ -138,22 +137,15 @@ Command-line options:
 
 For advanced manual setup, see docs/manual_install.md.
 
-### Testing the Installation
+### Application List and Desktop Icon Fix
 
-You can test the installation process without making any changes to your system using the test framework:
+In some cases Echo is not showing up in application list or showing desktop icon after install. To fix run script:
 
 ```bash
-# Test installation on your platform
-python Echo-Notes/installers/test_framework.py --mode install
-
-# Test uninstallation on your platform
-python Echo-Notes/installers/test_framework.py --mode uninstall
-
-# Test on a specific platform
-python Echo-Notes/installers/test_framework.py --mode install --platform windows|macos|linux
+# Run Script
+chmod +x create_desktop_entry.sh
+./create_desktop_entry.sh
 ```
-
-This is useful for verifying that the installation will work correctly on your system before actually performing it.
 
 ---
 
