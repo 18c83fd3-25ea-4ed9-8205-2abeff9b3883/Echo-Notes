@@ -691,17 +691,151 @@ class EchoNotesDashboard(QMainWindow):
         try:
             logger.info("Opening configuration page")
             dialog = QDialog(self)
-            dialog.setWindowTitle("Configuration")
+            dialog.setWindowTitle("Scheduling Configuration")
             dialog.setMinimumSize(500, 400)
             
             # Create layout
             layout = QVBoxLayout(dialog)
-            layout.addWidget(QLabel("Configuration Page"))
             
-            # Add close button
+            # Import required widgets
+            from PyQt6.QtWidgets import QSpinBox, QComboBox, QFormLayout, QCheckBox, QHBoxLayout
+            
+            # Create form layout for scheduling settings
+            form_layout = QFormLayout()
+            
+            # Processing interval (in hours)
+            processing_interval_combo = QComboBox()
+            processing_intervals = [
+                ("Hourly", 60),           # 60 minutes
+                ("Every 6 hours", 360),   # 6 * 60 minutes
+                ("Every 12 hours", 720),  # 12 * 60 minutes
+                ("Daily", 1440)           # 24 * 60 minutes
+            ]
+            
+            for label, minutes in processing_intervals:
+                processing_interval_combo.addItem(label, minutes)
+            
+            # Set current value
+            current_interval = config.SCHEDULE_CONFIG.get("processing_interval", config.DEFAULT_PROCESSING_INTERVAL)
+            # Find closest match
+            closest_index = 0
+            min_diff = float('inf')
+            for i, (_, minutes) in enumerate(processing_intervals):
+                diff = abs(minutes - current_interval)
+                if diff < min_diff:
+                    min_diff = diff
+                    closest_index = i
+            
+            processing_interval_combo.setCurrentIndex(closest_index)
+            form_layout.addRow("Process Notes Interval:", processing_interval_combo)
+            
+            # Summary interval (in weeks)
+            summary_interval_combo = QComboBox()
+            summary_intervals = [
+                ("Weekly", 10080),        # 7 * 24 * 60 minutes
+                ("Bi-weekly", 20160),     # 14 * 24 * 60 minutes
+                ("Every 4 weeks", 40320)  # 28 * 24 * 60 minutes
+            ]
+            
+            for label, minutes in summary_intervals:
+                summary_interval_combo.addItem(label, minutes)
+            
+            # Set current value
+            current_summary = config.SCHEDULE_CONFIG.get("summary_interval", config.DEFAULT_SUMMARY_INTERVAL)
+            # Find closest match
+            closest_summary_index = 0
+            min_summary_diff = float('inf')
+            for i, (_, minutes) in enumerate(summary_intervals):
+                diff = abs(minutes - current_summary)
+                if diff < min_summary_diff:
+                    min_summary_diff = diff
+                    closest_summary_index = i
+            
+            summary_interval_combo.setCurrentIndex(closest_summary_index)
+            form_layout.addRow("Summary Generation Interval:", summary_interval_combo)
+            
+            # Summary day
+            summary_day_combo = QComboBox()
+            days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            for day in days:
+                summary_day_combo.addItem(day)
+            current_day = config.SCHEDULE_CONFIG.get("summary_day", config.DEFAULT_SUMMARY_DAY)
+            summary_day_combo.setCurrentIndex(current_day)
+            form_layout.addRow("Summary Day:", summary_day_combo)
+            
+            # Summary hour
+            summary_hour_spin = QSpinBox()
+            summary_hour_spin.setRange(0, 23)
+            summary_hour_spin.setValue(config.SCHEDULE_CONFIG.get("summary_hour", config.DEFAULT_SUMMARY_HOUR))
+            form_layout.addRow("Summary Hour:", summary_hour_spin)
+            
+            # Daemon enabled
+            daemon_enabled_check = QCheckBox()
+            daemon_enabled_check.setChecked(config.SCHEDULE_CONFIG.get("daemon_enabled", True))
+            form_layout.addRow("Daemon Enabled:", daemon_enabled_check)
+            
+            # Add form layout to main layout
+            layout.addLayout(form_layout)
+            
+            # Add buttons
+            button_layout = QHBoxLayout()
+            save_button = QPushButton("Save")
             close_button = QPushButton("Close")
+            
+            button_layout.addWidget(save_button)
+            button_layout.addWidget(close_button)
+            layout.addLayout(button_layout)
+            
+            # Connect buttons
             close_button.clicked.connect(dialog.close)
-            layout.addWidget(close_button)
+            
+            # Save button handler
+            def save_config():
+                try:
+                    # Save scheduling config
+                    schedule_config = config.SCHEDULE_CONFIG.copy()
+                    # Get the minutes value from the combo box's current item data
+                    schedule_config["processing_interval"] = processing_interval_combo.currentData()
+                    schedule_config["summary_interval"] = summary_interval_combo.currentData()
+                    schedule_config["summary_day"] = summary_day_combo.currentIndex()
+                    schedule_config["summary_hour"] = summary_hour_spin.value()
+                    schedule_config["daemon_enabled"] = daemon_enabled_check.isChecked()
+                    
+                    # Save to file
+                    config.save_schedule_config(schedule_config)
+                    
+                    # Update in-memory config
+                    config.SCHEDULE_CONFIG = schedule_config
+                    
+                    # Show success message
+                    from PyQt6.QtWidgets import QMessageBox
+                    QMessageBox.information(dialog, "Success", "Scheduling configuration saved successfully!")
+                    
+                    # Close dialog
+                    dialog.accept()
+                    
+                    # If daemon is running, ask if user wants to restart
+                    if self.daemon_running:
+                        restart = QMessageBox.question(
+                            self,
+                            "Restart Daemon?",
+                            "Scheduling configuration has been updated. Do you want to restart the daemon to apply these changes?",
+                            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                            QMessageBox.StandardButton.Yes
+                        )
+                        
+                        if restart == QMessageBox.StandardButton.Yes:
+                            logger.info("Restarting daemon to apply new configuration...")
+                            self.stop_daemon()
+                            # Wait a moment for the daemon to fully stop
+                            QTimer.singleShot(2000, self.start_daemon)
+                    
+                except Exception as e:
+                    logger.error(f"Error saving configuration: {e}")
+                    logger.error(traceback.format_exc())
+                    QMessageBox.warning(dialog, "Error", f"Failed to save configuration: {str(e)}")
+            
+            save_button.clicked.connect(save_config)
             
             dialog.exec()
         except Exception as e:
@@ -713,17 +847,106 @@ class EchoNotesDashboard(QMainWindow):
         try:
             logger.info("Opening model page")
             dialog = QDialog(self)
-            dialog.setWindowTitle("Model")
+            dialog.setWindowTitle("Model Configuration")
             dialog.setMinimumSize(500, 400)
             
             # Create layout
             layout = QVBoxLayout(dialog)
-            layout.addWidget(QLabel("Model Page"))
             
-            # Add close button
+            # Import required widgets
+            from PyQt6.QtWidgets import QLineEdit, QFormLayout, QTextEdit, QHBoxLayout, QMessageBox, QLabel, QComboBox
+            
+            # Create form layout for model settings
+            form_layout = QFormLayout()
+            
+            # Model selection
+            model_combo = QComboBox()
+            # Add some common models
+            models = ["qwen2.5-7b-instruct-1m", "llama3-8b-instruct", "mistral-7b-instruct", "gemma-7b-instruct"]
+            for model in models:
+                model_combo.addItem(model)
+            
+            # Set current model
+            current_model_index = model_combo.findText(config.LLM_MODEL)
+            if current_model_index >= 0:
+                model_combo.setCurrentIndex(current_model_index)
+            else:
+                # If current model is not in the list, add it
+                model_combo.addItem(config.LLM_MODEL)
+                model_combo.setCurrentIndex(model_combo.count() - 1)
+                
+            form_layout.addRow("LLM Model:", model_combo)
+            
+            # LLM URL
+            llm_url_input = QLineEdit(config.LM_URL)
+            form_layout.addRow("LLM Server URL:", llm_url_input)
+            
+            # Load prompts from file
+            import json
+            try:
+                with open(config.PROMPTS_CONFIG_PATH, 'r') as f:
+                    prompts_config = json.load(f)
+            except Exception as e:
+                logger.error(f"Error loading prompts config: {e}")
+                prompts_config = {}
+            
+            # Daily notes prompt
+            form_layout.addRow("Daily Notes Prompt:", QLabel(""))  # Empty label as spacer
+            daily_prompt_edit = QTextEdit()
+            daily_prompt_edit.setPlainText(prompts_config.get("daily_notes_prompt", ""))
+            daily_prompt_edit.setMinimumHeight(150)
+            form_layout.addRow("", daily_prompt_edit)
+            
+            # Weekly summary prompt
+            form_layout.addRow("Weekly Summary Prompt:", QLabel(""))  # Empty label as spacer
+            weekly_prompt_edit = QTextEdit()
+            weekly_prompt_edit.setPlainText(prompts_config.get("weekly_summary_prompt", ""))
+            weekly_prompt_edit.setMinimumHeight(150)
+            form_layout.addRow("", weekly_prompt_edit)
+            
+            # Add form layout to main layout
+            layout.addLayout(form_layout)
+            
+            # Add buttons
+            button_layout = QHBoxLayout()
+            save_button = QPushButton("Save")
             close_button = QPushButton("Close")
+            
+            button_layout.addWidget(save_button)
+            button_layout.addWidget(close_button)
+            layout.addLayout(button_layout)
+            
+            # Connect buttons
             close_button.clicked.connect(dialog.close)
-            layout.addWidget(close_button)
+            
+            # Save button handler
+            def save_model_config():
+                try:
+                    # Update model settings in memory
+                    config.LLM_MODEL = model_combo.currentText()
+                    config.LM_URL = llm_url_input.text()
+                    
+                    # Save prompts config
+                    prompts_config = {
+                        "daily_notes_prompt": daily_prompt_edit.toPlainText(),
+                        "weekly_summary_prompt": weekly_prompt_edit.toPlainText()
+                    }
+                    
+                    with open(config.PROMPTS_CONFIG_PATH, 'w') as f:
+                        json.dump(prompts_config, f, indent=2)
+                    
+                    # Show success message
+                    QMessageBox.information(dialog, "Success", "Model configuration saved successfully!")
+                    
+                    # Close dialog
+                    dialog.accept()
+                    
+                except Exception as e:
+                    logger.error(f"Error saving model configuration: {e}")
+                    logger.error(traceback.format_exc())
+                    QMessageBox.warning(dialog, "Error", f"Failed to save model configuration: {str(e)}")
+            
+            save_button.clicked.connect(save_model_config)
             
             dialog.exec()
         except Exception as e:
