@@ -384,6 +384,25 @@ def install_dependencies(venv_path, requirements_file=None, dev_mode=True):
         print_color(Colors.RED, f"Error installing core dependencies: {e}")
         return False
     
+    # Install llama-cpp-python for local LLM support
+    try:
+        print_color(Colors.BLUE, "Installing llama-cpp-python for local LLM support...")
+        # Try to install with OpenBLAS for better performance
+        try:
+            env = os.environ.copy()
+            env["CMAKE_ARGS"] = "-DLLAMA_BLAS=ON -DLLAMA_BLAS_VENDOR=OpenBLAS"
+            subprocess.run([str(pip_path), "install", "llama-cpp-python"], env=env, check=True)
+            print_color(Colors.GREEN, "Installed llama-cpp-python with OpenBLAS support")
+        except subprocess.SubprocessError:
+            # Fall back to standard installation if OpenBLAS fails
+            print_color(Colors.YELLOW, "OpenBLAS installation failed, falling back to standard installation")
+            subprocess.run([str(pip_path), "install", "llama-cpp-python"], check=True)
+            print_color(Colors.GREEN, "Installed llama-cpp-python")
+    except subprocess.SubprocessError as e:
+        print_color(Colors.RED, f"Error installing llama-cpp-python: {e}")
+        print_color(Colors.YELLOW, "Local LLM functionality may not work properly")
+        # Continue installation despite this error
+    
     # Install from requirements.txt if available
     if requirements_file and Path(requirements_file).exists():
         try:
@@ -636,6 +655,28 @@ X-GNOME-Autostart-enabled=true
         print(f"{venv_path}/bin/python {install_dir}/echo_notes/daemon.py --daemon")
         return False
 
+def download_phi2_model(install_dir):
+    """Download the Phi-2 model if it doesn't exist."""
+    print_color(Colors.BLUE, "Checking for Phi-2 model...")
+    
+    try:
+        # Import the model manager
+        sys.path.append(str(install_dir))
+        from installers.common.model_manager import ensure_model_available
+        
+        # Ensure the model is available
+        if ensure_model_available(install_dir):
+            print_color(Colors.GREEN, "Phi-2 model is available")
+            return True
+        else:
+            print_color(Colors.RED, "Failed to download Phi-2 model")
+            print_color(Colors.YELLOW, "Echo-Notes will fall back to external API for LLM functionality")
+            return False
+    except Exception as e:
+        print_color(Colors.RED, f"Error checking/downloading Phi-2 model: {e}")
+        print_color(Colors.YELLOW, "Echo-Notes will fall back to external API for LLM functionality")
+        return False
+
 def install_linux(install_dir, options):
     """Perform Linux-specific installation."""
     # Check Python version
@@ -658,6 +699,9 @@ def install_linux(install_dir, options):
     # Configure application
     if not configure_application(install_dir):
         return False
+    
+    # Download Phi-2 model
+    download_phi2_model(install_dir)
     
     # Create desktop shortcuts
     if not options.get("no_shortcuts", False):

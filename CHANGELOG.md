@@ -1,5 +1,24 @@
 # Echo-Notes Changelog
 
+## [2025-05-23] - Local LLM Integration with Phi-2
+
+### Added
+- Integrated Phi-2 as a local LLM option using llama-cpp-python
+- Added fallback mechanism to external API when local model is unavailable
+- Created models directory structure for storing local model files
+- Added USE_LOCAL_MODEL configuration option in config.py
+- Added test script (test_phi2.py) to verify local model functionality
+- Added automatic Phi-2 model download during installation
+- Created model_manager.py to handle downloading and managing the Phi-2 model
+
+### Changed
+- Enhanced llm_client.py to support both local model inference and API calls
+- Improved error handling with graceful fallback to external API
+- Updated dashboard UI to include a dedicated checkbox for enabling/disabling the local Phi-2 model
+- Added explanatory text in the model configuration page to clarify the benefits of using the local model
+- Modified installer to automatically download the Phi-2 model from Hugging Face
+- Updated installation process to install llama-cpp-python with OpenBLAS support when possible
+
 ## [2025-05-23] - .docx File Processing Fix
 
 ### Fixed

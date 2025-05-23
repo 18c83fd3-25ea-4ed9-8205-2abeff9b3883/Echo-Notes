@@ -15,6 +15,7 @@ APP_DIR = Path(os.environ.get('ECHO_APP_DIR', DEFAULT_APP_DIR))
 LM_URL = 'http://localhost:8080/v1/chat/completions'
 SUMMARY_MARKER = 'CLEANED & STRUCTURED NOTES'
 LLM_MODEL = "qwen2.5-7b-instruct-1m"
+USE_LOCAL_MODEL = True  # Set to False to always use remote API
 
 # Path to the prompts configuration file
 # This uses the APP_DIR to locate prompts_config.json

@@ -854,10 +854,24 @@ class EchoNotesDashboard(QMainWindow):
             layout = QVBoxLayout(dialog)
             
             # Import required widgets
-            from PyQt6.QtWidgets import QLineEdit, QFormLayout, QTextEdit, QHBoxLayout, QMessageBox, QLabel, QComboBox
+            from PyQt6.QtWidgets import QLineEdit, QFormLayout, QTextEdit, QHBoxLayout, QMessageBox, QLabel, QComboBox, QCheckBox
             
             # Create form layout for model settings
             form_layout = QFormLayout()
+            
+            # Local model checkbox
+            local_model_checkbox = QCheckBox("Use local Phi-2 model (recommended)")
+            local_model_checkbox.setChecked(config.USE_LOCAL_MODEL)
+            local_model_checkbox.setToolTip("When enabled, Echo Notes will use the local Phi-2 model for inference.\nThis improves privacy and reduces dependency on external services.")
+            form_layout.addRow("Local Model:", local_model_checkbox)
+            
+            # Add a label explaining the local model
+            local_model_label = QLabel("The local Phi-2 model is built into Echo Notes and works offline.\nIt's recommended for most users unless you need specific capabilities from external models.")
+            local_model_label.setWordWrap(True)
+            form_layout.addRow("", local_model_label)
+            
+            # Model selection for external API
+            form_layout.addRow(QLabel("External API Settings (used when local model is disabled or as fallback):"))
             
             # Model selection
             model_combo = QComboBox()
@@ -875,7 +889,7 @@ class EchoNotesDashboard(QMainWindow):
                 model_combo.addItem(config.LLM_MODEL)
                 model_combo.setCurrentIndex(model_combo.count() - 1)
                 
-            form_layout.addRow("LLM Model:", model_combo)
+            form_layout.addRow("External LLM Model:", model_combo)
             
             # LLM URL
             llm_url_input = QLineEdit(config.LM_URL)
@@ -923,8 +937,26 @@ class EchoNotesDashboard(QMainWindow):
             def save_model_config():
                 try:
                     # Update model settings in memory
+                    config.USE_LOCAL_MODEL = local_model_checkbox.isChecked()
                     config.LLM_MODEL = model_combo.currentText()
                     config.LM_URL = llm_url_input.text()
+                    
+                    # Update config.py file to persist USE_LOCAL_MODEL setting
+                    config_path = Path(__file__).parent / "shared" / "config.py"
+                    if config_path.exists():
+                        with open(config_path, 'r') as f:
+                            config_content = f.read()
+                        
+                        # Replace the USE_LOCAL_MODEL line
+                        import re
+                        new_content = re.sub(
+                            r'USE_LOCAL_MODEL\s*=\s*(True|False)',
+                            f'USE_LOCAL_MODEL = {config.USE_LOCAL_MODEL}',
+                            config_content
+                        )
+                        
+                        with open(config_path, 'w') as f:
+                            f.write(new_content)
                     
                     # Save prompts config
                     prompts_config = {

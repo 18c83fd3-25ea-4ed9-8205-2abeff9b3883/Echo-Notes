@@ -2,11 +2,11 @@
 
 ### Sync, Process, and Summarize Notes, Files, Emails Privately and automatically with local AI
 
-**A privacy-first voice-to-text, file, and note cleanup pipeline powered by local LLMs.**  
+**A privacy-first voice-to-text, file, and note cleanup pipeline powered by local LLMs.**
 - Type or capture voice-to-text notes on your phone or laptop.
 - Sync them to your home computer via Nextcloud, Syncthing, Rclone, or your method of choice.
 - Or Drop emails, files, or articles into the folder.
-- Then automatically clean, structure, summarize, or create To Do's with them using a local language model..
+- Then automatically clean, structure, summarize, or create To Do's with them using the built-in Phi-2 local language model.
 
 ---
 
@@ -35,14 +35,16 @@ For users who want:
 ## How It Works
 
 ```text
-[Voice or Text Input]  
+[Voice or Text Input]
        ↓
     [Sync]
        ↓
-  [Local LLM] 
+[Built-in Phi-2 Local LLM]
        ↓
 [Daily & Weekly Processing]
 ```
+
+Echo Notes uses the Phi-2 model (automatically downloaded during installation) to process your notes locally, ensuring privacy and offline functionality.
 
 ---
 
@@ -176,7 +178,9 @@ Custom prompts (see shared/prompts_config.json)
 
 GUI Dashboard: Monitor, trigger, configure
 
-Local LLM processing via LM Studio
+Built-in Phi-2 local LLM for private, offline processing - [See details](Docs/local_llm.md)
+
+External LLM support via LM Studio or other API providers
 
 Daemon support for background operation
 
