@@ -958,12 +958,52 @@ class EchoNotesDashboard(QMainWindow):
         try:
             logger.info("Opening about page")
             dialog = QDialog(self)
-            dialog.setWindowTitle("About")
+            dialog.setWindowTitle("About Echo Notes")
             dialog.setMinimumSize(500, 400)
             
             # Create layout
             layout = QVBoxLayout(dialog)
-            layout.addWidget(QLabel("About Page"))
+            
+            # Import required widgets
+            from PyQt6.QtWidgets import QHBoxLayout
+            from PyQt6.QtGui import QPixmap
+            
+            # Create header with icon and title
+            header_layout = QHBoxLayout()
+            
+            # Add icon
+            icon_path = Path(__file__).parent / "Echo-Notes-Icon.png"
+            icon_label = QLabel()
+            if icon_path.exists():
+                pixmap = QPixmap(str(icon_path))
+                icon_label.setPixmap(pixmap.scaled(64, 64, Qt.AspectRatioMode.KeepAspectRatio))
+            else:
+                # Create a placeholder if icon doesn't exist
+                icon_label.setText("🗒️")
+                icon_label.setFont(QFont("Arial", 36))
+            
+            header_layout.addWidget(icon_label)
+            
+            # Add title
+            title_label = QLabel("Echo Notes")
+            title_label.setFont(QFont("Arial", 18, QFont.Weight.Bold))
+            header_layout.addWidget(title_label)
+            header_layout.addStretch()
+            
+            layout.addLayout(header_layout)
+            
+            # Add description
+            description = "Echo Notes is a secure, local-first journaling app that organizes your voice notes into clean, searchable text. Built with privacy in mind, it leverages local AI models to summarize and tag entries automatically—no internet required."
+            
+            description_label = QLabel(description)
+            description_label.setWordWrap(True)
+            description_label.setFont(QFont("Arial", 11))
+            description_label.setContentsMargins(10, 20, 10, 20)
+            
+            layout.addWidget(description_label)
+            
+            # Add spacer
+            layout.addStretch()
             
             # Add close button
             close_button = QPushButton("Close")
