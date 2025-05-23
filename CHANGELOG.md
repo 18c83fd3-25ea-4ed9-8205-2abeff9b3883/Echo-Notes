@@ -1,5 +1,19 @@
 # Echo-Notes Changelog
 
+## [2025-05-23] - .docx File Processing Fix
+
+### Fixed
+- Fixed issue with .docx files not being processed by the daemon and "Process Notes" button
+- Added proper writer functionality for .docx files to preserve binary format
+- Fixed LLM server availability check to use /models endpoint instead of GET requests to /chat/completions
+- Updated dashboard to recognize and display .docx files in the last processed notes
+- Enhanced file_utils.py to use appropriate writer functions based on file extension
+
+### Added
+- Added text_to_docx function to convert processed text back to .docx format
+- Added get_writer_for_file function to select the appropriate writer based on file extension
+- Added unit tests for the new writer functionality
+
 ## [2025-05-22] - Multi-Format File Support
 
 ### Added
