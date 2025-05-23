@@ -15,7 +15,8 @@ from pathlib import Path
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QLabel, QTextEdit, QGroupBox, QSplitter,
-    QFrame, QSizePolicy, QFileDialog, QMessageBox
+    QFrame, QSizePolicy, QFileDialog, QMessageBox, QDialog,
+    QMenu
 )
 from PyQt6.QtCore import Qt, QTimer, pyqtSlot, QSize, pyqtSignal, QObject, QMetaObject, Q_ARG, QThread
 from PyQt6.QtGui import QFont, QIcon, QColor, QPalette
@@ -28,7 +29,7 @@ from echo_notes.shared.config import SCHEDULE_CONFIG
 # Set up logging
 logging.basicConfig(
     level=logging.DEBUG,  # Changed from INFO to DEBUG for more detailed logs
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    format='%(asctime)s - %(name)s - %(message)s',  # Removed levelname from format
     handlers=[
         logging.StreamHandler(),
         logging.FileHandler(Path.home() / 'Documents' / 'notes' / 'dashboard.log')
@@ -71,8 +72,8 @@ class LogHandler(logging.Handler):
     def __init__(self, text_widget):
         super().__init__()
         self.text_widget = text_widget  # Store the text widget
-        # Use a custom formatter that only shows date and time (no seconds)
-        self.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', 
+        # Use a custom formatter that only shows date and time (no seconds) and no log level
+        self.setFormatter(logging.Formatter('%(asctime)s - %(message)s',
                                            datefmt='%Y-%m-%d %H:%M'))
 
     def emit(self, record):
@@ -123,13 +124,28 @@ class EchoNotesDashboard(QMainWindow):
         central_widget = QWidget()
         main_layout = QVBoxLayout(central_widget)
 
-        # Status section
+        # Status section with hamburger menu
         status_group = QGroupBox("Daemon Status")
         status_layout = QVBoxLayout(status_group)
-
+        
+        # Add hamburger menu button to status header
+        status_header = QHBoxLayout()
+        
         self.status_label = QLabel("Status: Checking...")
         self.status_label.setFont(QFont("Arial", 12, QFont.Weight.Bold))
-        status_layout.addWidget(self.status_label)
+        status_header.addWidget(self.status_label)
+        
+        # Add spacer to push hamburger button to the right
+        status_header.addStretch()
+        
+        # Create hamburger menu button
+        self.menu_button = QPushButton("≡")
+        self.menu_button.setFixedSize(30, 30)
+        self.menu_button.setFont(QFont("Arial", 14))
+        self.menu_button.clicked.connect(self.show_menu)
+        status_header.addWidget(self.menu_button)
+        
+        status_layout.addLayout(status_header)
 
         # Timestamps section
         timestamps_layout = QHBoxLayout()
@@ -645,6 +661,96 @@ class EchoNotesDashboard(QMainWindow):
             logger.error(f"Error during application shutdown: {e}")
             logger.error(traceback.format_exc())
             event.accept()  # Accept the close event anyway
+
+    def show_menu(self):
+        """Show the popup menu when hamburger button is clicked"""
+        try:
+            # Create popup menu
+            menu = QMenu(self)
+            
+            # Add menu items
+            config_action = menu.addAction('Config')
+            model_action = menu.addAction('Model')
+            about_action = menu.addAction('About')
+            
+            # Connect menu items to handlers
+            config_action.triggered.connect(self.open_config_page)
+            model_action.triggered.connect(self.open_model_page)
+            about_action.triggered.connect(self.open_about_page)
+            
+            # Show menu at button position
+            menu.exec(self.menu_button.mapToGlobal(self.menu_button.rect().bottomLeft()))
+            
+            logger.debug("Hamburger menu shown")
+        except Exception as e:
+            logger.error(f"Error showing hamburger menu: {e}")
+            logger.error(traceback.format_exc())
+    
+    def open_config_page(self):
+        """Open the configuration page"""
+        try:
+            logger.info("Opening configuration page")
+            dialog = QDialog(self)
+            dialog.setWindowTitle("Configuration")
+            dialog.setMinimumSize(500, 400)
+            
+            # Create layout
+            layout = QVBoxLayout(dialog)
+            layout.addWidget(QLabel("Configuration Page"))
+            
+            # Add close button
+            close_button = QPushButton("Close")
+            close_button.clicked.connect(dialog.close)
+            layout.addWidget(close_button)
+            
+            dialog.exec()
+        except Exception as e:
+            logger.error(f"Error opening configuration page: {e}")
+            logger.error(traceback.format_exc())
+    
+    def open_model_page(self):
+        """Open the model page"""
+        try:
+            logger.info("Opening model page")
+            dialog = QDialog(self)
+            dialog.setWindowTitle("Model")
+            dialog.setMinimumSize(500, 400)
+            
+            # Create layout
+            layout = QVBoxLayout(dialog)
+            layout.addWidget(QLabel("Model Page"))
+            
+            # Add close button
+            close_button = QPushButton("Close")
+            close_button.clicked.connect(dialog.close)
+            layout.addWidget(close_button)
+            
+            dialog.exec()
+        except Exception as e:
+            logger.error(f"Error opening model page: {e}")
+            logger.error(traceback.format_exc())
+    
+    def open_about_page(self):
+        """Open the about page"""
+        try:
+            logger.info("Opening about page")
+            dialog = QDialog(self)
+            dialog.setWindowTitle("About")
+            dialog.setMinimumSize(500, 400)
+            
+            # Create layout
+            layout = QVBoxLayout(dialog)
+            layout.addWidget(QLabel("About Page"))
+            
+            # Add close button
+            close_button = QPushButton("Close")
+            close_button.clicked.connect(dialog.close)
+            layout.addWidget(close_button)
+            
+            dialog.exec()
+        except Exception as e:
+            logger.error(f"Error opening about page: {e}")
+            logger.error(traceback.format_exc())
 
 def main():
     """Main entry point for the dashboard application"""
