@@ -1,5 +1,19 @@
 # Echo-Notes Changelog
 
+## [2025-05-22] - Multi-Format File Support
+
+### Added
+- Added support for processing .txt and .docx files in addition to .md files
+- Created new file_converters.py module to handle different file formats
+- Added python-docx dependency for processing Word documents
+- Added comprehensive documentation in Docs/file_format_support.md
+- Added unit tests for file format converters
+
+### Changed
+- Updated file_utils.py to use the new file converter system
+- Modified notes_nextcloud.py to process multiple file formats
+- Updated README.md to mention the new file format support
+
 ## [2025-05-12] - Installer and Uninstaller Improvements
 
 ### Fixed
