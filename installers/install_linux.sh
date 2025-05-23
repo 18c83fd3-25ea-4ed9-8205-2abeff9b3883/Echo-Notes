@@ -353,8 +353,19 @@ def create_virtual_environment(install_dir, venv_name="echo_notes_venv"):
     if not venv_path.exists():
         print_color(Colors.BLUE, "Creating new virtual environment...")
         try:
-            venv.create(venv_path, with_pip=True)
+            # Use subprocess to create venv instead of venv.create
+            # This is more reliable across different Python versions
+            subprocess.run([sys.executable, "-m", "venv", str(venv_path)], check=True)
             print_color(Colors.GREEN, "Created virtual environment")
+            
+            # Set permissions for the virtual environment
+            try:
+                bin_path = venv_path / "bin"
+                subprocess.run(["chmod", "-R", "755", str(bin_path)], check=True)
+                print_color(Colors.GREEN, f"Set permissions for virtual environment: {bin_path}")
+            except Exception as e:
+                print_color(Colors.YELLOW, f"Warning: Could not set permissions for virtual environment: {e}")
+                print_color(Colors.YELLOW, "You may need to run: sudo chmod -R 755 ~/Echo-Notes/echo_notes_venv/bin/")
         except Exception as e:
             print_color(Colors.RED, f"Error creating virtual environment: {e}")
             return None
@@ -367,6 +378,7 @@ def install_dependencies(venv_path, requirements_file=None, dev_mode=True):
     
     os_type = platform.system().lower()
     pip_path = venv_path / ("Scripts" if os_type == "windows" else "bin") / "pip"
+    python_path = venv_path / ("Scripts" if os_type == "windows" else "bin") / "python"
     
     # Upgrade pip
     try:
@@ -391,6 +403,27 @@ def install_dependencies(venv_path, requirements_file=None, dev_mode=True):
             print_color(Colors.GREEN, "Installed dependencies from requirements.txt")
         except subprocess.SubprocessError as e:
             print_color(Colors.RED, f"Error installing from requirements.txt: {e}")
+            print_color(Colors.YELLOW, "Trying with sudo...")
+            try:
+                subprocess.run(["sudo", str(pip_path), "install", "-r", str(requirements_file)], check=True)
+                print_color(Colors.GREEN, "Installed dependencies from requirements.txt with sudo")
+            except subprocess.SubprocessError as e:
+                print_color(Colors.RED, f"Error installing from requirements.txt with sudo: {e}")
+                return False
+    
+    # Install additional required packages
+    try:
+        subprocess.run([str(pip_path), "install", "python-docx"], check=True)
+        print_color(Colors.GREEN, "Installed python-docx")
+    except subprocess.SubprocessError as e:
+        print_color(Colors.RED, f"Error installing python-docx: {e}")
+        print_color(Colors.YELLOW, "Trying with sudo...")
+        try:
+            subprocess.run(["sudo", str(pip_path), "install", "python-docx"], check=True)
+            print_color(Colors.GREEN, "Installed python-docx with sudo")
+        except subprocess.SubprocessError as e:
+            print_color(Colors.RED, f"Error installing python-docx with sudo: {e}")
+            print_color(Colors.YELLOW, "You may need to run: sudo ~/Echo-Notes/echo_notes_venv/bin/pip install python-docx")
             return False
     
     # Install the package in development mode
@@ -448,6 +481,24 @@ def create_desktop_shortcuts(install_dir, venv_path):
     print_color(Colors.BLUE, "Creating desktop shortcuts and application menu entries...")
     
     try:
+        # First try to use the create_desktop_entry.sh script if it exists
+        desktop_script = install_dir / "create_desktop_entry.sh"
+        if desktop_script.exists():
+            print_color(Colors.YELLOW, "Found create_desktop_entry.sh script, using it to create desktop entry")
+            try:
+                # Copy the script to home directory
+                home_script = Path.home() / "create_desktop_entry.sh"
+                shutil.copy(desktop_script, home_script)
+                os.chmod(home_script, 0o755)
+                
+                # Run the script
+                subprocess.run([str(home_script)], check=True)
+                print_color(Colors.GREEN, "Desktop entry created using create_desktop_entry.sh")
+                return True
+            except Exception as e:
+                print_color(Colors.YELLOW, f"Error running create_desktop_entry.sh: {e}")
+                print_color(Colors.YELLOW, "Falling back to manual desktop entry creation")
+        
         # Install the icon
         icons_dir = Path.home() / ".local/share/icons"
         os.makedirs(icons_dir, exist_ok=True)
@@ -512,6 +563,55 @@ Categories=Utility;
         print_color(Colors.RED, f"Error creating desktop shortcuts: {e}")
         return False
 
+def patch_launcher_scripts(install_dir, venv_path):
+    """Patch the shebang and add sys.path in launcher scripts."""
+    print_color(Colors.BLUE, "Patching launcher scripts...")
+    
+    try:
+        dashboard_path = install_dir / "echo_notes/dashboard.py"
+        daemon_path = install_dir / "echo_notes/daemon.py"
+        
+        for script_path in [dashboard_path, daemon_path]:
+            if not script_path.exists():
+                print_color(Colors.RED, f"Script not found: {script_path}")
+                continue
+                
+            # Read the script content
+            with open(script_path, "r") as f:
+                content = f.readlines()
+            
+            # Prepare the new shebang and import statements
+            shebang = f"#!{venv_path}/bin/python\n"
+            import_hack = "import sys, os\n"
+            path_hack = f"sys.path.insert(0, '{install_dir}')\n"
+            chdir_hack = f"os.chdir('{install_dir}')\n"
+            
+            # Update the content
+            if content[0].startswith("#!"):
+                content[0] = shebang
+            else:
+                content.insert(0, shebang)
+                
+            # Insert the path hack after the shebang
+            content.insert(1, import_hack)
+            content.insert(2, path_hack)
+            content.insert(3, chdir_hack)
+            content.insert(4, "\n")  # Add a blank line for readability
+            
+            # Write the updated content back
+            with open(script_path, "w") as f:
+                f.writelines(content)
+                
+            # Make the script executable
+            os.chmod(script_path, 0o755)
+            
+            print_color(Colors.GREEN, f"Patched script: {script_path}")
+            
+        return True
+    except Exception as e:
+        print_color(Colors.RED, f"Error patching launcher scripts: {e}")
+        return False
+
 def create_symlinks(install_dir, venv_path):
     """Create symlinks in ~/.local/bin for Echo-Notes executables."""
     print_color(Colors.BLUE, "Creating symlinks in ~/.local/bin...")
@@ -520,6 +620,10 @@ def create_symlinks(install_dir, venv_path):
         # Create ~/.local/bin if it doesn't exist
         bin_dir = Path.home() / ".local/bin"
         os.makedirs(bin_dir, exist_ok=True)
+        
+        # Patch the launcher scripts before creating symlinks
+        if not patch_launcher_scripts(install_dir, venv_path):
+            print_color(Colors.YELLOW, "Warning: Failed to patch launcher scripts")
         
         # Create symlinks
         symlinks = {
