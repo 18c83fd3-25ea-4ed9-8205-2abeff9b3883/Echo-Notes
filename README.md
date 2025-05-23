@@ -142,9 +142,17 @@ For advanced manual setup, see docs/manual_install.md.
 In some cases Echo is not showing up in application list or showing desktop icon after install. To fix run script:
 
 ```bash
+# Permissions for the virtual environment:
+sudo chmod -R 755 ~/Echo-Notes/echo_notes_venv/bin/
+
+# Install the required dependency:
+sudo ~/Echo-Notes/echo_notes_venv/bin/pip install python-docx
+
 # Run Script
-chmod +x create_desktop_entry.sh
-./create_desktop_entry.sh
+cp ~/Echo-Notes/create_desktop_entry.sh ~/
+chmod +x ~/create_desktop_entry.sh
+~/create_desktop_entry.sh
+
 ```
 
 ---
