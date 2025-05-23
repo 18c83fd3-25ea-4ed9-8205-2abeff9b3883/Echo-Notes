@@ -28,6 +28,7 @@
 For users who want:
 - 100% local, private AI-based note and file processing
 - Clean, modular architecture
+- Can process .txt, .md, or .docx files
 
 ---
 
