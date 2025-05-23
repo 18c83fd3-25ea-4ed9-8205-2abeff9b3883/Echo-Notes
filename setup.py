@@ -7,7 +7,8 @@ setup(
     install_requires=[
         'requests>=2.25.1',
         'python-dateutil>=2.8.2',
-        'PyQt6>=6.4.0'
+        'PyQt6>=6.4.0',
+        'python-docx>=0.8.11'  # For processing .docx files
     ],
     python_requires='>=3.7',
     entry_points={
