@@ -161,6 +161,8 @@ Daily note cleanup and structuring
 
 Weekly summaries with actionable insights
 
+Multiple file format support (.md, .txt, .docx) - [See details](Docs/file_format_support.md)
+
 Custom prompts (see shared/prompts_config.json)
 
 GUI Dashboard: Monitor, trigger, configure

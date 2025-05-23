@@ -9,7 +9,8 @@ try:
         config,
         file_utils,
         date_helpers,
-        llm_client
+        llm_client,
+        file_converters
     )
     print("Successfully imported from echo_notes.shared")
 except ImportError:
@@ -18,7 +19,8 @@ except ImportError:
         config,
         file_utils,
         date_helpers,
-        llm_client
+        llm_client,
+        file_converters
     )
     print("Falling back to import from shared")
 
@@ -44,11 +46,22 @@ def main():
     logger = logging.getLogger('notes_nextcloud')
     logger.debug(f"Processing notes from directory: {config.NOTES_DIR}")
     
+    # Supported file extensions
+    SUPPORTED_EXTENSIONS = ['.md', '.txt', '.docx']
+    
     for fname in os.listdir(config.NOTES_DIR):
         file_path = config.NOTES_DIR / fname
         logger.debug(f"Checking file: {file_path}")
-        if file_path.suffix == '.md':
-            process_note(file_path)
+        if file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
+            try:
+                logger.info(f"Processing file: {file_path}")
+                process_note(file_path)
+            except ImportError as e:
+                logger.error(f"Missing dependency for {file_path}: {e}")
+                print(f"Error: {e}")
+            except Exception as e:
+                logger.error(f"Failed to process {file_path}: {e}")
+                print(f"Error processing {file_path}: {e}")
 
 if __name__ == "__main__":
     main()
