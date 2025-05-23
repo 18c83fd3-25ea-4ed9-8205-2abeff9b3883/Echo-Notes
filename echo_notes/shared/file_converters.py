@@ -40,6 +40,29 @@ def docx_to_text(file_path: Path) -> str:
     
     return '\n'.join(full_text)
 
+def text_to_docx(file_path: Path, content: str) -> None:
+    """
+    Write text content to a .docx file.
+    Requires python-docx package.
+    """
+    try:
+        import docx
+    except ImportError:
+        raise ImportError(
+            "python-docx package is required to process .docx files. "
+            "Please install it with: pip install python-docx"
+        )
+    
+    # Create a new document
+    doc = docx.Document()
+    
+    # Add paragraphs for each line in the content
+    for paragraph in content.split('\n'):
+        doc.add_paragraph(paragraph)
+    
+    # Save the document
+    doc.save(file_path)
+
 def get_converter_for_file(file_path: Path):
     """Get the appropriate converter function for a file based on its extension"""
     extension = file_path.suffix.lower()
@@ -51,3 +74,15 @@ def get_converter_for_file(file_path: Path):
     }
     
     return converters.get(extension)
+
+def get_writer_for_file(file_path: Path):
+    """Get the appropriate writer function for a file based on its extension"""
+    extension = file_path.suffix.lower()
+    
+    writers = {
+        '.txt': lambda path, content: open(path, 'w', encoding='utf-8').write(content),
+        '.docx': text_to_docx,
+        '.md': lambda path, content: open(path, 'w', encoding='utf-8').write(content),
+    }
+    
+    return writers.get(extension)
