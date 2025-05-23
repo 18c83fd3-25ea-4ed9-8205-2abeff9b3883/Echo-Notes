@@ -26,7 +26,17 @@ def is_processed_note(text: str) -> bool:
 
 def write_processed_note(file_path: Path, content: str):
     """Overwrite note with processed content"""
-    # For now, we always write back as the same format
-    # In the future, we could add options to convert between formats
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(content)
+    from .file_converters import get_writer_for_file
+    
+    writer = get_writer_for_file(file_path)
+    if writer:
+        try:
+            writer(file_path, content)
+        except ImportError as e:
+            logger.error(f"Failed to write to {file_path}: {e}")
+            raise
+        except Exception as e:
+            logger.error(f"Error writing to {file_path}: {e}")
+            raise
+    else:
+        raise ValueError(f"Unsupported file format for writing: {file_path.suffix}")

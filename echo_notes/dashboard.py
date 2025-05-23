@@ -272,7 +272,10 @@ class EchoNotesDashboard(QMainWindow):
             notes_dir = config.NOTES_DIR
             logger.debug(f"Checking for notes in directory: {notes_dir}")
             if notes_dir.exists():
-                note_files = [f for f in notes_dir.iterdir() if f.suffix == '.md' and not f.name.startswith('Weekly Summary')]
+                # Look for .md, .txt, and .docx files
+                note_files = [f for f in notes_dir.iterdir()
+                             if f.suffix in ['.md', '.txt', '.docx']
+                             and not f.name.startswith('Weekly Summary')]
                 if note_files:
                     latest_note = max(note_files, key=os.path.getmtime)
                     mtime = datetime.datetime.fromtimestamp(os.path.getmtime(latest_note))
@@ -420,8 +423,11 @@ class EchoNotesDashboard(QMainWindow):
             # Check if LLM server is available before processing
             import requests
             try:
-                logger.debug(f"Checking LLM server availability at {config.LM_URL}")
-                response = requests.get(config.LM_URL, timeout=1)
+                # Use models endpoint to check server availability instead of chat completions
+                server_url = config.LM_URL.rsplit('/', 2)[0]  # Remove '/chat/completions'
+                models_url = f"{server_url}/models"
+                logger.debug(f"Checking LLM server availability at {models_url}")
+                response = requests.get(models_url, timeout=1)
                 logger.debug(f"LLM server response status: {response.status_code}")
                 
                 # LLM server is available, proceed with processing
@@ -498,8 +504,11 @@ class EchoNotesDashboard(QMainWindow):
             # Check if LLM server is available before processing
             import requests
             try:
-                logger.debug(f"Checking LLM server availability at {config.LM_URL}")
-                response = requests.get(config.LM_URL, timeout=1)
+                # Use models endpoint to check server availability instead of chat completions
+                server_url = config.LM_URL.rsplit('/', 2)[0]  # Remove '/chat/completions'
+                models_url = f"{server_url}/models"
+                logger.debug(f"Checking LLM server availability at {models_url}")
+                response = requests.get(models_url, timeout=1)
                 logger.debug(f"LLM server response status: {response.status_code}")
                 
                 # LLM server is available, proceed with summary generation
