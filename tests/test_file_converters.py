@@ -77,6 +77,26 @@ class TestFileConverters(unittest.TestCase):
         unsupported_file = Path('test.xyz')
         unsupported_converter = file_converters.get_converter_for_file(unsupported_file)
         self.assertIsNone(unsupported_converter)
+    
+    def test_get_writer_for_file(self):
+        """Test getting the appropriate writer for a file."""
+        # Test with a .txt file
+        txt_writer = file_converters.get_writer_for_file(self.txt_file)
+        self.assertIsNotNone(txt_writer)
+        
+        # Test with a .md file
+        md_writer = file_converters.get_writer_for_file(self.md_file)
+        self.assertIsNotNone(md_writer)
+        
+        # Test with a .docx file (we don't need an actual file for this test)
+        docx_file = Path('test.docx')
+        docx_writer = file_converters.get_writer_for_file(docx_file)
+        self.assertEqual(docx_writer, file_converters.text_to_docx)
+        
+        # Test with an unsupported file format
+        unsupported_file = Path('test.xyz')
+        unsupported_writer = file_converters.get_writer_for_file(unsupported_file)
+        self.assertIsNone(unsupported_writer)
 
 if __name__ == '__main__':
     unittest.main()
